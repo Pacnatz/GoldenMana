@@ -1,12 +1,16 @@
 using System;
 using System.IO;
+using System.Collections;
 using System.Security.Cryptography;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using TMPro;
 
 public class SaveManager : MonoBehaviour {
 
     public static SaveManager Instance { get; private set; }
+
+    [SerializeField] private GameObject playerPrefab;
 
     private const string SAVE_PATH = "/save.txt";
     private const string KEY_PATH = "/key.txt";
@@ -21,12 +25,21 @@ public class SaveManager : MonoBehaviour {
         }
     }
 
+    // Testing
+    private void Update() {
+        if (Input.GetKeyDown(KeyCode.L)) {
+            Load();
+        }
+    }
+
+
     // ############################################################################## SAVE AND LOAD SYSTEM
-    public void Save() {
+    public void Save(Vector2 savePos, string scene) {
         // Save data here
         SaveObject saveObject = new SaveObject {
             health = 10,
-            scene = "CaveLevel1"
+            savePos = savePos,
+            scene = scene
         };
 
         // Encrypt save data
@@ -52,24 +65,33 @@ public class SaveManager : MonoBehaviour {
             string keyJson = File.ReadAllText(Application.dataPath + KEY_PATH);
             KeyObject keyObject = JsonUtility.FromJson<KeyObject>(keyJson);
             // Load Save Data
-            string cipherJson = File.ReadAllText(Application.dataPath + SAVE_PATH);
-            string json = DecryptDataWithAes(cipherJson, keyObject.keyBase64, keyObject.vectorBase64);
+            string encryptedSaveJson = File.ReadAllText(Application.dataPath + SAVE_PATH);
+            string json = DecryptDataWithAes(encryptedSaveJson, keyObject.keyBase64, keyObject.vectorBase64);
 
             SaveObject saveObject = JsonUtility.FromJson<SaveObject>(json);
 
-            // Save data here
+            // Load data here
             // health = saveObject.health;
+
+            StartCoroutine(LoadSaveFile(saveObject.scene, saveObject.savePos));
         }
         else {
             Debug.LogWarning("Key not found");
         }
         
     }
+    private IEnumerator LoadSaveFile(string scene, Vector2 savePos) {
+        SceneManager.LoadScene(scene);
+        float sceneDelay = .5f;
+        yield return new WaitForSeconds(sceneDelay);
+        PlayerMove.Instance.gameObject.transform.position = savePos;
 
+    }
 
     // Save data class
     public class SaveObject {
         public float health;
+        public Vector2 savePos;
         public string scene;
     }
     // Class to store keys
@@ -78,6 +100,7 @@ public class SaveManager : MonoBehaviour {
         public string vectorBase64;
     }
 
+
     // ############################################################################## SAVE AND LOAD SYSTEM
 
 
@@ -85,11 +108,6 @@ public class SaveManager : MonoBehaviour {
     // ############################################################################## AES ENCRYPTION FROM https://www.siakabaro.com/how-to-perform-aes-encryption-in-net/
     private static string EncryptDataWithAes(string plainText, out string keyBase64, out string vectorBase64) {
         using (Aes aesAlgorithm = Aes.Create()) {
-            Console.WriteLine($"Aes Cipher Mode : {aesAlgorithm.Mode}");
-            Console.WriteLine($"Aes Padding Mode: {aesAlgorithm.Padding}");
-            Console.WriteLine($"Aes Key Size : {aesAlgorithm.KeySize}");
-            Console.WriteLine($"Aes Block Size : {aesAlgorithm.BlockSize}");
-
             //set the parameters with out keyword
             keyBase64 = Convert.ToBase64String(aesAlgorithm.Key);
             vectorBase64 = Convert.ToBase64String(aesAlgorithm.IV);
@@ -120,11 +138,6 @@ public class SaveManager : MonoBehaviour {
         using (Aes aesAlgorithm = Aes.Create()) {
             aesAlgorithm.Key = Convert.FromBase64String(keyBase64);
             aesAlgorithm.IV = Convert.FromBase64String(vectorBase64);
-
-            Console.WriteLine($"Aes Cipher Mode : {aesAlgorithm.Mode}");
-            Console.WriteLine($"Aes Padding Mode: {aesAlgorithm.Padding}");
-            Console.WriteLine($"Aes Key Size : {aesAlgorithm.KeySize}");
-            Console.WriteLine($"Aes Block Size : {aesAlgorithm.BlockSize}");
 
             // Create decryptor object
             ICryptoTransform decryptor = aesAlgorithm.CreateDecryptor();
