@@ -94,9 +94,12 @@ public class PlayerMove : MonoBehaviour
 
     private void Input_OnJumpPressed(object sender, System.EventArgs e) {
         if (onFloor) {
-            isJumping = true;
-            float jumpSpeed = 6f;
-            rb.linearVelocityY = jumpSpeed;
+            if (rb != null) { // For some reason you need this test or bad things will happen
+                isJumping = true;
+                float jumpSpeed = 6f;
+                rb.linearVelocityY = jumpSpeed;
+            }
+            
         }
     }
     private void Input_OnJumpCanceled(object sender, System.EventArgs e) {

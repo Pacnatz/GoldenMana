@@ -4261,7 +4261,7 @@ GameObject:
   - component: {fileID: 2110506738}
   - component: {fileID: 2110506737}
   - component: {fileID: 2110506736}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: SavePoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4451,7 +4451,7 @@ GameObject:
   - component: {fileID: 549828005753123484}
   - component: {fileID: 4568977234569626040}
   - component: {fileID: 4568977234569626039}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4584,7 +4584,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8399192463886754902}
   - component: {fileID: 6320393250461073925}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Circle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
