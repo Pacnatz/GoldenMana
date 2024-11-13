@@ -82,7 +82,7 @@ public class SaveManager : MonoBehaviour {
     }
     private IEnumerator LoadSaveFile(string scene, Vector2 savePos) {
         SceneManager.LoadScene(scene);
-        float sceneDelay = .5f;
+        float sceneDelay = .1f;
         yield return new WaitForSeconds(sceneDelay);
         PlayerMove.Instance.gameObject.transform.position = savePos;
 

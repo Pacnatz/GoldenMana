@@ -12,13 +12,17 @@ public class PlayerVisual : MonoBehaviour
     
     private bool isJumping;
 
-    private void Start() {
+    private void Awake() {
         sprite = GetComponent<SpriteRenderer>();
         anim = GetComponent<Animator>();
-        PlayerMove.Instance.OnJumpAction += Instance_OnJumpAction;
+        
     }
 
-    
+    private void Start() {
+        PlayerMove.Instance.OnJumpAction += GameInstance_OnJumpAction;
+    }
+
+
 
     private void Update() {
         moveDir = GameInput.Instance.GetMovementVectorX();
@@ -62,16 +66,19 @@ public class PlayerVisual : MonoBehaviour
     }
 
 
-    private void Instance_OnJumpAction(object sender, PlayerMove.OnJumpActionEventArgs e) {
-        if (e.IsJumping) {
-            anim.Play("Jump");
-            isJumping = true;
-        }
-        else {
-            if (!PlayerMove.Instance.onFloor) {
-                anim.Play("Fall");
+    private void GameInstance_OnJumpAction(object sender, PlayerMove.OnJumpActionEventArgs e) {
+        if (anim != null) { // Test here or bad things will happen
+            if (e.IsJumping) {
+                anim.Play("Jump");
+                isJumping = true;
             }
-            isJumping = false;
+            else {
+                if (!PlayerMove.Instance.onFloor) {
+                    anim.Play("Fall");
+                }
+                isJumping = false;
+            }
         }
+        
     }
 }

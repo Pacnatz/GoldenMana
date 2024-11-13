@@ -128,7 +128,7 @@ public class PlayerMove : MonoBehaviour
     }
 
 
-    private void Input_OnJumpPressed(object sender, System.EventArgs e) {
+    private void Input_OnJumpPressed(object sender, EventArgs e) {
         if (onFloor) {
             if (rb != null) { // Some reason need this test or bad things will happen
                 isJumping = true;
@@ -137,7 +137,7 @@ public class PlayerMove : MonoBehaviour
             OnJumpAction?.Invoke(this, new OnJumpActionEventArgs { IsJumping = true });
         }
     }
-    private void Input_OnJumpCanceled(object sender, System.EventArgs e) {
+    private void Input_OnJumpCanceled(object sender, EventArgs e) {
         isJumping = false;
     }
 
