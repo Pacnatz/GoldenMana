@@ -6,13 +6,17 @@ public class PlayerMove : MonoBehaviour
     public static PlayerMove Instance { get; private set; }
 
     public event EventHandler OnInteractPressed;
+    public event EventHandler<OnJumpActionEventArgs> OnJumpAction;
+    public class OnJumpActionEventArgs : EventArgs {
+        public bool IsJumping;
+    }
 
     [SerializeField] private LayerMask floorLayer;
 
     private float moveDir;
     private Rigidbody2D rb;
 
-    private bool onFloor = false;
+    public bool onFloor { get; private set; } = false;
     private bool isJumping = false;
     private float startJumpHeight;
     
@@ -38,7 +42,6 @@ public class PlayerMove : MonoBehaviour
 
         moveDir = GameInput.Instance.GetMovementVectorX();
         HandleMovement();
-        
 
     }
 
@@ -46,38 +49,57 @@ public class PlayerMove : MonoBehaviour
 
         // Test floor
         float playerWidth = .25f;
-        RaycastHit2D hit = Physics2D.CircleCast(transform.position, playerWidth, Vector2.down, .7f, floorLayer);  // Distance is player height / 2 + 0.2
+        float playerOffset = playerWidth / 2;
+        RaycastHit2D hit = Physics2D.CircleCast(transform.position, playerWidth, Vector2.down, .3f, floorLayer);  // Modify distance if character sprite changes
+        // Testing both sides for ground
+        Vector2 rayOriginLeft = new Vector2(transform.position.x - playerOffset, transform.position.y);
+        Vector2 rayOriginRight = new Vector2(transform.position.x + playerOffset, transform.position.y);
+
+        bool isGroundedLeft = Physics2D.Raycast(rayOriginLeft, Vector2.down, .5f, floorLayer);
+        bool isGroundedRight = Physics2D.Raycast(rayOriginRight, Vector2.down, .5f, floorLayer);
+
         if (hit) { onFloor = true; }
         else { onFloor = false; }
 
+
         // Handle Jump
         float jumpDeceleration;
-        float minJumpHeight = 1;
+        float minJumpHeight = 1f;
         if (isJumping) {
 
             if (transform.position.y < startJumpHeight + minJumpHeight) {
                 float jumpSpeed = 6f;
                 rb.linearVelocityY = jumpSpeed;
+                
             }
-            else{
-                jumpDeceleration = 8.9f;
+            else {
+                jumpDeceleration = 9.4f;
                 rb.linearVelocityY -= jumpDeceleration * Time.deltaTime;
             }
-            if (rb.linearVelocityY <= 0) { //If decelerated to 0
-                    isJumping = false;
+            if (rb.linearVelocityY <= 0) { // If decelerated to 0
+                isJumping = false;
             }
-            
+
         }
         else {
-            float minVelocityY = -11f;
-            float fallSpeed = 2f;
-            rb.linearVelocityY = Mathf.Lerp(rb.linearVelocityY, minVelocityY, fallSpeed * Time.deltaTime);
+            if (!isGroundedLeft && !isGroundedRight) { // If theres not ground on both sides
+                if (rb.linearVelocityY <= 0) { // Fire event if on floor OR yVelocity going down
+                    OnJumpAction?.Invoke(this, new OnJumpActionEventArgs { IsJumping = false });
+                }
+                float minVelocityY = -11f;
+                float fallSpeed = 2f;
+                rb.linearVelocityY = Mathf.Lerp(rb.linearVelocityY, minVelocityY, fallSpeed * Time.deltaTime);
+            }
+            else { // Handle falling down corners with capsulecollider2D
+                rb.linearVelocityY = 0;
+            }
+            
         }
 
         // Handle X Movement *slidy x movement*
         if (moveDir != 0) {  // Acceleration
-            float accelerationRate = 10f;
-            float opposingDecelerationRate = 30f; // Deceleration rate when input is in opposite direction
+            float accelerationRate = 7f;
+            float opposingDecelerationRate = 22f; // Deceleration rate when input is in opposite direction
             float maxMoveSpeed = 4.3f;
             if (rb.linearVelocityX > 0 && moveDir < 0) { // Handle opposite XMovement
                 rb.linearVelocityX += moveDir * opposingDecelerationRate * Time.deltaTime;
@@ -91,12 +113,15 @@ public class PlayerMove : MonoBehaviour
             rb.linearVelocityX = Mathf.Clamp(rb.linearVelocityX, -maxMoveSpeed, maxMoveSpeed);
         }
         else {  // Deceleration
-            float decelerationRate = 20f;  // Decleration rate when no input
-            if (rb.linearVelocityX > 0) {
+            float decelerationRate = 15f;  // Decleration rate when no input
+            if (rb.linearVelocityX > 0.05f) {
                 rb.linearVelocityX -= decelerationRate * Time.deltaTime;
             }
-            else {
+            else if (rb.linearVelocityX < -0.05f) {
                 rb.linearVelocityX += decelerationRate * Time.deltaTime;
+            }
+            else {
+                rb.linearVelocityX = 0;
             }
         }
 
@@ -105,11 +130,11 @@ public class PlayerMove : MonoBehaviour
 
     private void Input_OnJumpPressed(object sender, System.EventArgs e) {
         if (onFloor) {
-            if (rb != null) {
+            if (rb != null) { // Some reason need this test or bad things will happen
                 isJumping = true;
                 startJumpHeight = transform.position.y;
             }
-
+            OnJumpAction?.Invoke(this, new OnJumpActionEventArgs { IsJumping = true });
         }
     }
     private void Input_OnJumpCanceled(object sender, System.EventArgs e) {
