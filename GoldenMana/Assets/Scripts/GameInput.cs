@@ -53,4 +53,9 @@ public class GameInput : MonoBehaviour
         return moveDirX;
     }
 
+    public Vector2 GetAttackVector() {
+        Vector2 attackVector = playerInput.Player.Attack.ReadValue<Vector2>();
+        return attackVector;
+    }
+
 }

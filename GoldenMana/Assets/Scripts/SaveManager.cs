@@ -73,14 +73,14 @@ public class SaveManager : MonoBehaviour {
             // Load data here
             // health = saveObject.health;
 
-            StartCoroutine(LoadSaveFile(saveObject.scene, saveObject.savePos));
+            StartCoroutine(LoadPlayer(saveObject.scene, saveObject.savePos));
         }
         else {
             Debug.LogWarning("Key not found");
         }
         
     }
-    private IEnumerator LoadSaveFile(string scene, Vector2 savePos) {
+    private IEnumerator LoadPlayer(string scene, Vector2 savePos) {
         SceneManager.LoadScene(scene);
         float sceneDelay = .1f;
         yield return new WaitForSeconds(sceneDelay);
