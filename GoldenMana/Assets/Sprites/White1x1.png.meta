@@ -1,16 +1,10 @@
 fileFormatVersion: 2
-guid: 26da4976efdc0474b918a595253aa144
+guid: 0c0b7a8c6d361434a86d1d5b263cd931
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -1869929671772609748
-    second: Ark-Sheet_0
-  - first:
-      213: 7742009551185276573
-    second: Ark-Sheet_1
-  - first:
-      213: -1651249949240107046
-    second: Ark-Sheet_2
+      213: -5698893857412127497
+    second: White1x1_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -52,12 +46,12 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 2
+  spriteMode: 1
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 32
+  spritePixelsToUnits: 1
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -158,13 +152,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Ark-Sheet_0
+      name: White1x1_0
       rect:
         serializedVersion: 2
-        x: 3
+        x: 0
         y: 0
-        width: 10
-        height: 16
+        width: 1
+        height: 1
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -173,52 +167,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: c23e70feedcac06e0800000000000000
-      internalID: -1869929671772609748
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Ark-Sheet_1
-      rect:
-        serializedVersion: 2
-        x: 17
-        y: 0
-        width: 14
-        height: 16
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: d9e641afaa4217b60800000000000000
-      internalID: 7742009551185276573
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Ark-Sheet_2
-      rect:
-        serializedVersion: 2
-        x: 34
-        y: 0
-        width: 12
-        height: 16
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: adf592c7be49519e0800000000000000
-      internalID: -1651249949240107046
+      spriteID: 7f46b401b3679e0b0800000000000000
+      internalID: -5698893857412127497
       vertices: []
       indices: 
       edges: []
@@ -227,7 +177,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 5e97eb03825dee720800000000000000
     internalID: 0
     vertices: []
     indices: 
@@ -237,9 +187,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Ark-Sheet_0: -1869929671772609748
-      Ark-Sheet_1: 7742009551185276573
-      Ark-Sheet_2: -1651249949240107046
+      White1x1_0: -5698893857412127497
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -19,7 +19,7 @@ public class PlayerVisual : MonoBehaviour
     }
 
     private void Start() {
-        PlayerMove.Instance.OnJumpAction += GameInstance_OnJumpAction;
+        PlayerMove.Instance.OnJumpAction += PlayerInstance_OnJumpAction;
     }
 
 
@@ -32,6 +32,7 @@ public class PlayerVisual : MonoBehaviour
         }
 
         // Running logic
+        
         if (moveDir > 0) {
             if (!isJumping && PlayerMove.Instance.onFloor) {
                 anim.Play("Run");
@@ -50,7 +51,6 @@ public class PlayerVisual : MonoBehaviour
             }
         }
 
-
         // Camera Logic
         float offset = 2;
         float cameraVelocity = 2f;
@@ -66,11 +66,11 @@ public class PlayerVisual : MonoBehaviour
     }
 
 
-    private void GameInstance_OnJumpAction(object sender, PlayerMove.OnJumpActionEventArgs e) {
+    private void PlayerInstance_OnJumpAction(object sender, PlayerMove.OnJumpActionEventArgs e) {
         if (anim != null) { // Test here or bad things will happen
             if (e.IsJumping) {
-                anim.Play("Jump");
                 isJumping = true;
+                anim.Play("Jump");
             }
             else {
                 if (!PlayerMove.Instance.onFloor) {

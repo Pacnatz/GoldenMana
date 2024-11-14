@@ -49,7 +49,7 @@ public class PlayerMove : MonoBehaviour
 
         // Test floor
         float playerWidth = .25f;
-        float playerOffset = playerWidth / 2;
+        float playerOffset = playerWidth / 1.5f;
         RaycastHit2D hit = Physics2D.CircleCast(transform.position, playerWidth, Vector2.down, .3f, floorLayer);  // Modify distance if character sprite changes
         // Testing both sides for ground
         Vector2 rayOriginLeft = new Vector2(transform.position.x - playerOffset, transform.position.y);
@@ -61,6 +61,11 @@ public class PlayerMove : MonoBehaviour
         if (hit) { onFloor = true; }
         else { onFloor = false; }
 
+        // Test ceiling
+        RaycastHit2D hitCeiling = Physics2D.CircleCast(transform.position, playerWidth / 2, Vector2.up, .375f, floorLayer);  // Modify distance if character sprite changes
+        if (hitCeiling) {
+            isJumping = false;
+        }
 
         // Handle Jump
         float jumpDeceleration;
@@ -73,7 +78,7 @@ public class PlayerMove : MonoBehaviour
                 
             }
             else {
-                jumpDeceleration = 9.4f;
+                jumpDeceleration = 8.5f;
                 rb.linearVelocityY -= jumpDeceleration * Time.deltaTime;
             }
             if (rb.linearVelocityY <= 0) { // If decelerated to 0
@@ -92,6 +97,7 @@ public class PlayerMove : MonoBehaviour
             }
             else { // Handle falling down corners with capsulecollider2D
                 rb.linearVelocityY = 0;
+                OnJumpAction?.Invoke(this, new OnJumpActionEventArgs { IsJumping = false });
             }
             
         }
@@ -124,6 +130,7 @@ public class PlayerMove : MonoBehaviour
                 rb.linearVelocityX = 0;
             }
         }
+        
 
     }
 
