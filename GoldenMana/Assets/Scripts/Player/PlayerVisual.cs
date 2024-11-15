@@ -26,10 +26,7 @@ public class PlayerVisual : MonoBehaviour
 
     private void Update() {
         moveDir = GameInput.Instance.GetMovementVectorX();
-
-        if (moveDir != 0) {
-            moveDirStatic = moveDir;
-        }
+        moveDirStatic = PlayerMove.Instance.GetMoveDirectionStaticX();
 
         // Running logic
         

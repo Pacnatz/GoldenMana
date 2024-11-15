@@ -14,6 +14,7 @@ public class PlayerMove : MonoBehaviour
     [SerializeField] private LayerMask floorLayer;
 
     private float moveDir;
+    private float moveDirStatic;
     private Rigidbody2D rb;
 
     public bool onFloor { get; private set; } = false;
@@ -42,6 +43,10 @@ public class PlayerMove : MonoBehaviour
 
         moveDir = GameInput.Instance.GetMovementVectorX();
         HandleMovement();
+
+        if (moveDir != 0) { // Sets which way player is facing
+            moveDirStatic = moveDir;
+        }
 
     }
 
@@ -133,6 +138,8 @@ public class PlayerMove : MonoBehaviour
         
 
     }
+
+    public float GetMoveDirectionStaticX() => moveDirStatic;  // Get facing direction of player
 
 
     private void Input_OnJumpPressed(object sender, EventArgs e) {

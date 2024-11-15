@@ -56,9 +56,18 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Attack"",
+                    ""name"": ""AttackX"",
                     ""type"": ""Value"",
                     ""id"": ""ec62cc1a-62de-48f3-9094-5689360ae4b4"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""AttackY"",
+                    ""type"": ""Value"",
+                    ""id"": ""975b808a-2a02-4581-bd59-3d0de506971a"",
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
@@ -122,57 +131,68 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 },
                 {
-                    ""name"": ""2D Vector"",
-                    ""id"": ""b09ddf01-d14a-469c-8912-beea2f42626b"",
-                    ""path"": ""2DVector(mode=2)"",
+                    ""name"": ""1D Axis"",
+                    ""id"": ""3f0e6314-30d8-43fd-b3b8-92280225d1ae"",
+                    ""path"": ""1DAxis"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Attack"",
+                    ""action"": ""AttackX"",
                     ""isComposite"": true,
                     ""isPartOfComposite"": false
                 },
                 {
-                    ""name"": ""up"",
-                    ""id"": ""cc74b604-f244-4658-a97b-d30047640c45"",
-                    ""path"": ""<Keyboard>/upArrow"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Attack"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""down"",
-                    ""id"": ""3af26353-36f6-4e0a-8701-6c4a268c758e"",
-                    ""path"": ""<Keyboard>/downArrow"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Attack"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""left"",
-                    ""id"": ""7c62c957-fea0-4434-ab2a-b8e4d35c3f0d"",
+                    ""name"": ""negative"",
+                    ""id"": ""39d968c9-52e5-4ea6-9209-8c8ac780b160"",
                     ""path"": ""<Keyboard>/leftArrow"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Attack"",
+                    ""action"": ""AttackX"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
                 {
-                    ""name"": ""right"",
-                    ""id"": ""38798de1-9b76-4663-8590-d74f06245cb9"",
+                    ""name"": ""positive"",
+                    ""id"": ""5454c7b3-ea55-4786-bb8d-a469e713cb30"",
                     ""path"": ""<Keyboard>/rightArrow"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Attack"",
+                    ""action"": ""AttackX"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""1D Axis"",
+                    ""id"": ""70a224c6-8579-4f11-bf24-726281c6e148"",
+                    ""path"": ""1DAxis"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""AttackY"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""negative"",
+                    ""id"": ""308155f2-203b-45d3-8f0d-b6cd1fcec601"",
+                    ""path"": ""<Keyboard>/downArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""AttackY"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""positive"",
+                    ""id"": ""9847d279-6233-47a6-85e3-f9c20be7ad5d"",
+                    ""path"": ""<Keyboard>/upArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""AttackY"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 }
@@ -186,7 +206,8 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         m_Player_XMovement = m_Player.FindAction("XMovement", throwIfNotFound: true);
         m_Player_Jump = m_Player.FindAction("Jump", throwIfNotFound: true);
         m_Player_Interact = m_Player.FindAction("Interact", throwIfNotFound: true);
-        m_Player_Attack = m_Player.FindAction("Attack", throwIfNotFound: true);
+        m_Player_AttackX = m_Player.FindAction("AttackX", throwIfNotFound: true);
+        m_Player_AttackY = m_Player.FindAction("AttackY", throwIfNotFound: true);
     }
 
     ~@PlayerInput()
@@ -256,7 +277,8 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_XMovement;
     private readonly InputAction m_Player_Jump;
     private readonly InputAction m_Player_Interact;
-    private readonly InputAction m_Player_Attack;
+    private readonly InputAction m_Player_AttackX;
+    private readonly InputAction m_Player_AttackY;
     public struct PlayerActions
     {
         private @PlayerInput m_Wrapper;
@@ -264,7 +286,8 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         public InputAction @XMovement => m_Wrapper.m_Player_XMovement;
         public InputAction @Jump => m_Wrapper.m_Player_Jump;
         public InputAction @Interact => m_Wrapper.m_Player_Interact;
-        public InputAction @Attack => m_Wrapper.m_Player_Attack;
+        public InputAction @AttackX => m_Wrapper.m_Player_AttackX;
+        public InputAction @AttackY => m_Wrapper.m_Player_AttackY;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -283,9 +306,12 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @Interact.started += instance.OnInteract;
             @Interact.performed += instance.OnInteract;
             @Interact.canceled += instance.OnInteract;
-            @Attack.started += instance.OnAttack;
-            @Attack.performed += instance.OnAttack;
-            @Attack.canceled += instance.OnAttack;
+            @AttackX.started += instance.OnAttackX;
+            @AttackX.performed += instance.OnAttackX;
+            @AttackX.canceled += instance.OnAttackX;
+            @AttackY.started += instance.OnAttackY;
+            @AttackY.performed += instance.OnAttackY;
+            @AttackY.canceled += instance.OnAttackY;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -299,9 +325,12 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @Interact.started -= instance.OnInteract;
             @Interact.performed -= instance.OnInteract;
             @Interact.canceled -= instance.OnInteract;
-            @Attack.started -= instance.OnAttack;
-            @Attack.performed -= instance.OnAttack;
-            @Attack.canceled -= instance.OnAttack;
+            @AttackX.started -= instance.OnAttackX;
+            @AttackX.performed -= instance.OnAttackX;
+            @AttackX.canceled -= instance.OnAttackX;
+            @AttackY.started -= instance.OnAttackY;
+            @AttackY.performed -= instance.OnAttackY;
+            @AttackY.canceled -= instance.OnAttackY;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -324,6 +353,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         void OnXMovement(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
         void OnInteract(InputAction.CallbackContext context);
-        void OnAttack(InputAction.CallbackContext context);
+        void OnAttackX(InputAction.CallbackContext context);
+        void OnAttackY(InputAction.CallbackContext context);
     }
 }

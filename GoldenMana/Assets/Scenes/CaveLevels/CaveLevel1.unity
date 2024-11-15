@@ -5118,6 +5118,7 @@ GameObject:
   - component: {fileID: 711747650208324304}
   - component: {fileID: 549828005753123484}
   - component: {fileID: 4568977234569626040}
+  - component: {fileID: 4568977234569626042}
   - component: {fileID: 4568977234569626039}
   - component: {fileID: 4568977234569626041}
   m_Layer: 6
@@ -5192,10 +5193,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fireballPrefab: {fileID: 6574570830026789132, guid: 924f768c7af50b1419de5a631a6dabc8, type: 3}
-  leftAttackPos: {fileID: 812990115}
-  rightAttackPos: {fileID: 1500716033}
-  topAttackPos: {fileID: 1266474416}
-  bottomAttackPos: {fileID: 1233312123}
+  cooldown: 0.5
+--- !u!114 &4568977234569626042
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1956449770701136544}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ffef7e68ed0d1314cbf598f284989a26, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerAttack: {fileID: 4568977234569626041}
 --- !u!212 &6320393250461073925
 SpriteRenderer:
   m_ObjectHideFlags: 0
