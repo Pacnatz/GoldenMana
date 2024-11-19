@@ -53,4 +53,13 @@ public class GameInput : MonoBehaviour
         return moveDirX;
     }
 
+    public float GetAttackVectorX() {
+        float attackX = playerInput.Player.AttackX.ReadValue<float>();
+        return attackX;
+    }
+    public float GetAttackVectorY() {
+        float attackY = playerInput.Player.AttackY.ReadValue<float>();
+        return attackY;
+    }
+
 }
