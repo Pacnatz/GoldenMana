@@ -4,7 +4,7 @@ public class Fireball : MonoBehaviour
 {
     private Rigidbody2D rb;
     private float fireballSpeed = 20f;
-    private Vector2 velocity;
+    private Vector2 direction;
     private Vector2 startPos;
     private Vector2 endPos;
     private float range = 5f;
@@ -12,21 +12,24 @@ public class Fireball : MonoBehaviour
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
-        Destroy(gameObject, .5f);
     }
 
     private void Update()
     {
-        rb.linearVelocity = velocity * fireballSpeed;
+        rb.linearVelocity = direction * fireballSpeed;
+
+        if (Vector2.Distance(transform.position, endPos) < 1) {
+            Destroy(gameObject);
+        }
     }
 
-    public void InitializeFireball(PlayerAttack attackScript, Vector2 velocity) {
+    public void InitializeFireball(PlayerAttack attackScript, Vector2 direction) {
         this.attackScript = attackScript;
-        this.velocity = velocity;
+        this.direction = direction;
+
         startPos = transform.position;
-        if (velocity.x > 0) {
-            
-        }
+
+        endPos = startPos + direction * range;
 
     }
 

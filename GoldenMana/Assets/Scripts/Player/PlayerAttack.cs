@@ -12,6 +12,7 @@ public class PlayerAttack : MonoBehaviour
 
     [SerializeField] private GameObject fireballPrefab;
 
+    private AttackMode attackState;
 
     private bool canFire;
     private int fireballsActive;
@@ -19,21 +20,32 @@ public class PlayerAttack : MonoBehaviour
     private float attackX;
     private float attackY;
 
+    private void Start() {
+        attackState = AttackMode.FireSpell;
+    }
+
     private void Update() {
+
+        // Get attack vectors
         attackX = GameInput.Instance.GetAttackVectorX();
         attackY = GameInput.Instance.GetAttackVectorY();
 
-        HandleFireBallAttack();
-
-
-        // canFire fireball logic
-        if (attackX == 0 && attackY == 0 && fireballsActive < 2) {
-            canFire = true;
+        // Add more attackState cases
+        switch (attackState) {
+            case AttackMode.FireSpell:
+                HandleFireBallAttack();
+                break;
         }
+       
+        
     }
 
 
     private void HandleFireBallAttack() {
+        // canFire attack logic
+        if (attackX == 0 && attackY == 0 && fireballsActive < 2) {
+            canFire = true;
+        }
 
         if (attackX != 0 && canFire) {
             // Handle X axis attack
@@ -67,7 +79,7 @@ public class PlayerAttack : MonoBehaviour
                 fireball.transform.Rotate(transform.forward, -90);
                 fireballsActive++;
             }
-            else if (attackY < 0) {
+            else if (attackY < 0 && PlayerMove.Instance.onFloor == false) {
                 GameObject fireball = Instantiate(fireballPrefab, transform.position - yOffset, Quaternion.identity);
                 if (fireball.TryGetComponent<Fireball>(out var fireballScript)) {  // If fireball script is attached
                     fireballScript.InitializeFireball(this, new Vector2(0, attackY));
@@ -87,5 +99,11 @@ public class PlayerAttack : MonoBehaviour
 
     private void UseMana(float manaConsumption) {
         OnManaUsed?.Invoke(this, new OnManaUsedEventArgs { mana = manaConsumption, timeToContinueRegenerateMana = .5f });
+    }
+
+    public enum AttackMode {
+        FireSpell,
+        ThunderSpell,
+        EarthSpell
     }
 }

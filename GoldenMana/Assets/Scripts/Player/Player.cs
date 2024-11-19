@@ -43,8 +43,6 @@ public class Player : MonoBehaviour
         }
         mana = Mathf.Clamp(mana, 0, maxMana);
 
-        Debug.Log(mana);
-
     }
 
     public float GetMana() => mana;
