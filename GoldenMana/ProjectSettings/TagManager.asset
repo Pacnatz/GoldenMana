@@ -13,7 +13,7 @@ TagManager:
   - UI
   - Player
   - Floor
-  - SavePoint
+  - Slopes
   - 
   - 
   - 
@@ -40,6 +40,9 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Map
+    uniqueID: 4200052263
     locked: 0
   - name: Player
     uniqueID: 3461416039

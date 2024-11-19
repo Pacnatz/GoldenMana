@@ -55,7 +55,9 @@ public class PlayerMove : MonoBehaviour
         // Test floor
         float playerWidth = .25f;
         float playerOffset = playerWidth / 1.5f;
-        RaycastHit2D hit = Physics2D.CircleCast(transform.position, playerWidth, Vector2.down, .3f, floorLayer);  // Modify distance if character sprite changes
+        float playerSlopeOffset = playerWidth / 1.25f;
+        RaycastHit2D isGrounded = Physics2D.CircleCast(transform.position, playerWidth, Vector2.down, .45f, floorLayer);  // Modify distance if character sprite changes
+
         // Testing both sides for ground
         Vector2 rayOriginLeft = new Vector2(transform.position.x - playerOffset, transform.position.y);
         Vector2 rayOriginRight = new Vector2(transform.position.x + playerOffset, transform.position.y);
@@ -63,7 +65,15 @@ public class PlayerMove : MonoBehaviour
         bool isGroundedLeft = Physics2D.Raycast(rayOriginLeft, Vector2.down, .5f, floorLayer);
         bool isGroundedRight = Physics2D.Raycast(rayOriginRight, Vector2.down, .5f, floorLayer);
 
-        if (hit) { onFloor = true; }
+        // Testing both sides for slope
+        Vector2 raySlopeOriginLeft = new Vector2(transform.position.x - playerSlopeOffset, transform.position.y);
+        Vector2 raySlopeOriginRight = new Vector2(transform.position.x + playerSlopeOffset, transform.position.y);
+
+        bool onSlopeLeft = Physics2D.Raycast(raySlopeOriginLeft, Vector2.down, .42f, floorLayer);
+        bool onSlopeRight = Physics2D.Raycast(raySlopeOriginRight, Vector2.down, .42f, floorLayer);
+
+        // Ground check
+        if (isGrounded || onSlopeLeft || onSlopeRight) { onFloor = true; }
         else { onFloor = false; }
 
         // Test ceiling
@@ -75,7 +85,7 @@ public class PlayerMove : MonoBehaviour
         // Handle Jump
         float jumpDeceleration;
         float minJumpHeight = 1f;
-        if (isJumping) {
+        if (isJumping) { // Turned on from OnJumpPressed Event
 
             if (transform.position.y < startJumpHeight + minJumpHeight) {
                 float jumpSpeed = 6f;
@@ -112,6 +122,7 @@ public class PlayerMove : MonoBehaviour
             float accelerationRate = 7f;
             float opposingDecelerationRate = 22f; // Deceleration rate when input is in opposite direction
             float maxMoveSpeed = 4.3f;
+
             if (rb.linearVelocityX > 0 && moveDir < 0) { // Handle opposite XMovement
                 rb.linearVelocityX += moveDir * opposingDecelerationRate * Time.deltaTime;
             }
@@ -135,8 +146,12 @@ public class PlayerMove : MonoBehaviour
                 rb.linearVelocityX = 0;
             }
         }
-        
 
+        // Handle slopes
+        if (onFloor) {
+            float forceY = 8f;
+            if (onSlopeLeft || onSlopeRight) { rb.AddForceY(forceY, ForceMode2D.Force); }
+        }
     }
 
     public float GetMoveDirectionStaticX() => moveDirStatic;  // Get facing direction of player
