@@ -18,6 +18,8 @@ public class PlayerMove : MonoBehaviour
     private Rigidbody2D rb;
 
     public bool onFloor { get; private set; } = false;
+    private bool onSlopeLeft = false;
+    private bool onSlopeRight = false;
     private bool isJumping = false;
     private float startJumpHeight;
     
@@ -69,8 +71,8 @@ public class PlayerMove : MonoBehaviour
         Vector2 raySlopeOriginLeft = new Vector2(transform.position.x - playerSlopeOffset, transform.position.y);
         Vector2 raySlopeOriginRight = new Vector2(transform.position.x + playerSlopeOffset, transform.position.y);
 
-        bool onSlopeLeft = Physics2D.Raycast(raySlopeOriginLeft, Vector2.down, .42f, floorLayer);
-        bool onSlopeRight = Physics2D.Raycast(raySlopeOriginRight, Vector2.down, .42f, floorLayer);
+        onSlopeLeft = Physics2D.Raycast(raySlopeOriginLeft, Vector2.down, .42f, floorLayer);
+        onSlopeRight = Physics2D.Raycast(raySlopeOriginRight, Vector2.down, .42f, floorLayer);
 
         // Ground check
         if (isGrounded || onSlopeLeft || onSlopeRight) { onFloor = true; }
@@ -147,9 +149,13 @@ public class PlayerMove : MonoBehaviour
             }
         }
 
+        
+    }
+
+    private void FixedUpdate() {
         // Handle slopes
         if (onFloor) {
-            float forceY = 8f;
+            float forceY = 75f;
             if (onSlopeLeft || onSlopeRight) { rb.AddForceY(forceY, ForceMode2D.Force); }
         }
     }

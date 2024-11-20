@@ -1,7 +1,10 @@
 using UnityEngine;
-
+using UnityEngine.Tilemaps;
 public class Fireball : MonoBehaviour
 {
+    [SerializeField] private LayerMask breakableLayer;
+
+
     private Rigidbody2D rb;
     private float fireballSpeed = 20f;
     private Vector2 direction;
@@ -21,6 +24,19 @@ public class Fireball : MonoBehaviour
         if (Vector2.Distance(transform.position, endPos) < 1) {
             Destroy(gameObject);
         }
+
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, direction, .5f, breakableLayer);
+
+
+        if (hit) {
+            Tilemap breakableTileMap = hit.collider.transform.GetComponent<Tilemap>();
+            var worldHitPos = hit.point + direction * .5f;
+            var cellHitPos = breakableTileMap.layoutGrid.WorldToCell(worldHitPos);
+            Debug.Log(cellHitPos);
+            breakableTileMap.SetTile(cellHitPos, null);
+            Destroy(gameObject);
+        }
+
     }
 
     public void InitializeFireball(PlayerAttack attackScript, Vector2 direction) {
