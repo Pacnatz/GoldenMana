@@ -11,7 +11,7 @@ public class PlayerMove : MonoBehaviour
         public bool IsJumping;
     }
 
-    [SerializeField] private LayerMask floorLayer;
+    private LayerMask floorLayer;
 
     private float moveDir;
     private float moveDirStatic;
@@ -29,6 +29,8 @@ public class PlayerMove : MonoBehaviour
             Destroy(gameObject);
         }
         Instance = this;
+
+        floorLayer = LayerMask.GetMask("Floor", "Breakable");
     }
 
     private void Start() {
@@ -123,7 +125,7 @@ public class PlayerMove : MonoBehaviour
         if (moveDir != 0) {  // Acceleration
             float accelerationRate = 7f;
             float opposingDecelerationRate = 22f; // Deceleration rate when input is in opposite direction
-            float maxMoveSpeed = 4.3f;
+            float maxMoveSpeed = 4.8f;
 
             if (rb.linearVelocityX > 0 && moveDir < 0) { // Handle opposite XMovement
                 rb.linearVelocityX += moveDir * opposingDecelerationRate * Time.deltaTime;
@@ -155,7 +157,7 @@ public class PlayerMove : MonoBehaviour
     private void FixedUpdate() {
         // Handle slopes
         if (onFloor) {
-            float forceY = 75f;
+            float forceY = 59f;
             if (onSlopeLeft || onSlopeRight) { rb.AddForceY(forceY, ForceMode2D.Force); }
         }
     }

@@ -106,4 +106,6 @@ public class PlayerAttack : MonoBehaviour
         ThunderSpell,
         EarthSpell
     }
+
+    
 }

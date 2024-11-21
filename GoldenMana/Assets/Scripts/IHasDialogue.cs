@@ -5,6 +5,8 @@ public interface IHasDialogue {
     public string[] Dialogue { get; set; }
     public bool DialogueDone { get; set; }
 
-    public void OpenDialogueUI();
+    public void StartDialogue() {
+        DialogueUI.Instance.InitializeDialogue(Dialogue, this);
+    }
 
 }

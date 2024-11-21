@@ -25,14 +25,15 @@ public class Fireball : MonoBehaviour
             Destroy(gameObject);
         }
 
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, direction, .5f, breakableLayer);
 
+        // Hit breakable layer
+        float projectileWidth = .5f;
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, direction, projectileWidth, breakableLayer);
 
         if (hit) {
             Tilemap breakableTileMap = hit.collider.transform.GetComponent<Tilemap>();
-            var worldHitPos = hit.point + direction * .5f;
-            var cellHitPos = breakableTileMap.layoutGrid.WorldToCell(worldHitPos);
-            Debug.Log(cellHitPos);
+            var worldHitPos = hit.point + direction * projectileWidth;
+            var cellHitPos = breakableTileMap.WorldToCell(worldHitPos);
             breakableTileMap.SetTile(cellHitPos, null);
             Destroy(gameObject);
         }

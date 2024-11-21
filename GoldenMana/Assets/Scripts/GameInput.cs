@@ -8,6 +8,7 @@ public class GameInput : MonoBehaviour
     public event EventHandler OnJumpPressed;
     public event EventHandler OnJumpCanceled;
     public event EventHandler OnInteractPressed;
+    public event EventHandler OnUIContinuePressed;
 
     private PlayerInput playerInput;
     
@@ -30,11 +31,12 @@ public class GameInput : MonoBehaviour
         playerInput.Player.Jump.performed += Jump_performed;
         playerInput.Player.Jump.canceled += Jump_canceled;
         playerInput.Player.Interact.performed += Interact_performed;
+
+        playerInput.UI.Continue.performed += Continue_performed;
         
     }
 
     
-
     private void Jump_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj) {
         OnJumpPressed?.Invoke(this, EventArgs.Empty);
     }
@@ -61,5 +63,21 @@ public class GameInput : MonoBehaviour
         float attackY = playerInput.Player.AttackY.ReadValue<float>();
         return attackY;
     }
+
+    public void PausePlayer() {
+        playerInput.Player.Disable();
+        playerInput.UI.Enable();
+    }
+
+    public void UnPausePlayer() {
+        playerInput.UI.Disable();
+        playerInput.Player.Enable();
+        
+    }
+
+    private void Continue_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj) {
+        OnUIContinuePressed?.Invoke(this, EventArgs.Empty);
+    }
+
 
 }

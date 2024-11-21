@@ -11,7 +11,7 @@ public class Chest : BaseInteractable , IHasDialogue
     [SerializeField] private SpriteRenderer sr;
     [SerializeField] private Sprite openedChestSprite;
     [SerializeField] private string outputItem;
-    [SerializeField] private string[] dialog;
+    [SerializeField] private string[] dialogue;
 
     public string[] Dialogue { get; set; }
     public bool DialogueDone { get; set; }
@@ -21,13 +21,15 @@ public class Chest : BaseInteractable , IHasDialogue
 
 
     private void Awake() {
-        Dialogue = dialog;
+        Dialogue = dialogue; // Assign dialogue to the interface
     }
 
     private void Update() {
         if (DialogueDone) {
+            DialogueDone = false;
             // Invoke chest opened event??????
             OnChestOpened?.Invoke(this, new OnChestOpenedEventArgs { ItemID = outputItem });
+            Debug.Log("WORKS!");
         }
     }
 
@@ -37,19 +39,8 @@ public class Chest : BaseInteractable , IHasDialogue
             isOpened = true;
             sr.sprite = openedChestSprite;
 
-            OpenDialogueUI();
+            // Call Dialog UI
+            ((IHasDialogue)this).StartDialogue();
         }
-    }
-
-
-    public void OpenDialogueUI() {
-        // Set timescale to 0
-
-        // Get UI Instance open dialogue box
-        StartCoroutine(DialogueUI.Instance.OpenUIDialogue(Dialogue, this));
-
-        // Pass string dialogue to UI Instance
-
-        // On dialogue box done.. Invoke OnChestOpened Event
     }
 }

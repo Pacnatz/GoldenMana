@@ -94,6 +94,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sr: {fileID: 3240340515943714238}
   openedChestSprite: {fileID: 5303079706057587030, guid: 5115deaf719467e46b198de7a87a73c6, type: 3}
+  outputItem: 
+  dialogue: []
 --- !u!1 &3598415776857762231
 GameObject:
   m_ObjectHideFlags: 0
