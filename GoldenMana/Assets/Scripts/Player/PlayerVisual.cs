@@ -3,48 +3,97 @@ using Unity.Cinemachine;
 
 public class PlayerVisual : MonoBehaviour
 {
+    [SerializeField] private PlayerAttack attackScript;
     [SerializeField] private CinemachineFollow cameraFollow;
+    [SerializeField] SpriteRenderer topSprite;
+    [SerializeField] SpriteRenderer bottomSprite;
 
-    private SpriteRenderer sprite;
-    private Animator anim;
+    [SerializeField] private Animator topAnim;
+    [SerializeField] private Animator bottomAnim;
+    
     private float moveDir;
     private float moveDirStatic;
     
     private bool isJumping;
+    private bool isFalling;
+    private bool isAttacking;
+    private Vector2 attackDir;
 
-    private void Awake() {
-        sprite = GetComponent<SpriteRenderer>();
-        anim = GetComponent<Animator>();
-        
-    }
-
+    private float attackVectorX;
+    
     private void Start() {
         PlayerMove.Instance.OnJumpAction += PlayerInstance_OnJumpAction;
+        attackScript.OnAttackPressed += AttackScript_OnAttackPressed;
     }
 
 
 
     private void Update() {
+        // Move direction
         moveDir = GameInput.Instance.GetMovementVectorX();
         moveDirStatic = PlayerMove.Instance.GetMoveDirectionStaticX();
+
+
 
         // Running logic
         
         if (moveDir > 0) {
             if (!isJumping && PlayerMove.Instance.onFloor) {
-                anim.Play("Run");
+                bottomAnim.Play("Run");
             }
-            sprite.flipX = false;
+            topSprite.flipX = false;
+            bottomSprite.flipX = false;
         }
         else if (moveDir < 0) {
             if (!isJumping && PlayerMove.Instance.onFloor) {
-                anim.Play("Run");
+                bottomAnim.Play("Run");
             }
-            sprite.flipX = true;
+            topSprite.flipX = true;
+            bottomSprite.flipX = true;
         }
         else {
             if (!isJumping && PlayerMove.Instance.onFloor) {
-                anim.Play("Idle");
+                bottomAnim.Play("Idle");
+            }
+        }
+
+        // Attack Logic
+        if (isAttacking) {
+            if (attackDir.x != 0) {
+                topAnim.Play("AttackSide");
+            }
+            if (attackDir.y > 0) {
+                topAnim.Play("AttackTop");
+            }
+            if (attackDir.y < 0) {
+                topAnim.Play("AttackBottom");
+            }
+        }
+        else if (isJumping) {
+            topAnim.Play("Jump");
+        }
+        else if (isFalling) {
+            topAnim.Play("Fall");
+        }
+        else { // On floor
+            if (moveDir > 0) {
+                if (!isJumping && PlayerMove.Instance.onFloor) {
+                    topAnim.Play("Run");
+                }
+                topSprite.flipX = false;
+                bottomSprite.flipX = false;
+            }
+            else if (moveDir < 0) {
+                if (!isJumping && PlayerMove.Instance.onFloor) {
+                    topAnim.Play("Run");
+                }
+                topSprite.flipX = true;
+                bottomSprite.flipX = true;
+            }
+            else {
+                if (!isJumping && PlayerMove.Instance.onFloor) {
+                    topAnim.Play("Idle");
+                }
             }
         }
 
@@ -63,15 +112,34 @@ public class PlayerVisual : MonoBehaviour
     }
 
 
+    private void AttackScript_OnAttackPressed(object sender, PlayerAttack.OnAttackPressedEventArgs e) {
+        if (isAttacking) { // If already attacking
+            return;
+        }
+        isAttacking = true;
+        attackDir = e.AttackDir;
+        float attackAnimTime = .1f;
+        Invoke(nameof(TurnAttackOff), attackAnimTime);
+    }
+
+    private void TurnAttackOff() {
+        isAttacking = false;
+    }
+
     private void PlayerInstance_OnJumpAction(object sender, PlayerMove.OnJumpActionEventArgs e) {
-        if (anim != null) { // Test here or bad things will happen
+        if (topAnim != null && bottomAnim != null) { // Test here or bad things will happen
             if (e.IsJumping) {
                 isJumping = true;
-                anim.Play("Jump");
+                bottomAnim.Play("Jump");
+                topAnim.Play("Jump");
             }
             else {
                 if (!PlayerMove.Instance.onFloor) {
-                    anim.Play("Fall");
+                    bottomAnim.Play("Fall");
+                    isFalling = true;
+                }
+                else {
+                    isFalling = false;
                 }
                 isJumping = false;
             }

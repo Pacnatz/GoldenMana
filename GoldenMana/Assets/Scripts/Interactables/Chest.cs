@@ -3,11 +3,6 @@ using UnityEngine;
 
 public class Chest : BaseInteractable , IHasDialogue
 {
-    public event EventHandler<OnChestOpenedEventArgs> OnChestOpened;
-    public class OnChestOpenedEventArgs : EventArgs {
-        public string ItemID; // String for delegates to determine which item
-    }
-
     [SerializeField] private SpriteRenderer sr;
     [SerializeField] private Sprite openedChestSprite;
     [SerializeField] private string outputItem;
@@ -27,9 +22,7 @@ public class Chest : BaseInteractable , IHasDialogue
     private void Update() {
         if (DialogueDone) {
             DialogueDone = false;
-            // Invoke chest opened event??????
-            OnChestOpened?.Invoke(this, new OnChestOpenedEventArgs { ItemID = outputItem });
-            Debug.Log("WORKS!");
+            Player.Instance.RecieveItem(outputItem);
         }
     }
 
