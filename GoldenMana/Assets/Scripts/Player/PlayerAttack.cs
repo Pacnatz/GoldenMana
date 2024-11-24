@@ -72,6 +72,7 @@ public class PlayerAttack : MonoBehaviour
                 if (fireball.TryGetComponent<Fireball>(out var fireballScript)) {  // If fireball script is attached
                     fireballScript.InitializeFireball(this, new Vector2(attackX, 0));
                 }
+                fireball.transform.Rotate(transform.forward, 180);
                 fireballsActive++;
                 OnAttackPressed?.Invoke(this, new OnAttackPressedEventArgs { AttackDir = new Vector2(attackX, 0) });
             }
@@ -80,13 +81,13 @@ public class PlayerAttack : MonoBehaviour
         }
         if (attackY != 0 && canFire) {
             // Handle Y axis attack
-            Vector3 yOffset = new Vector3(0, 1f, 0);
+            Vector3 yOffset = new Vector3(0, .5f, 0);
             if (attackY > 0) {
-                GameObject fireball = Instantiate(fireballPrefab, transform.position + yOffset, Quaternion.identity);
+                GameObject fireball = Instantiate(fireballPrefab, transform.position + yOffset + new Vector3(0, .25f, 0), Quaternion.identity);
                 if (fireball.TryGetComponent<Fireball>(out var fireballScript)) {  // If fireball script is attached
                     fireballScript.InitializeFireball(this, new Vector2(0, attackY));
                 }
-                fireball.transform.Rotate(transform.forward, -90);
+                fireball.transform.Rotate(transform.forward, 90);
                 fireballsActive++;
                 OnAttackPressed?.Invoke(this, new OnAttackPressedEventArgs { AttackDir = new Vector2(0, attackY) });
             }
