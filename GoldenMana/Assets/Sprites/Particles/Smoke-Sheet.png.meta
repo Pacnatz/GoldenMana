@@ -289,8 +289,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 8d015c8fd985cd6449f372d2b0d409d6
-      internalID: 370388538
+      spriteID: ca4d5e7ecec080e4f96037f342392cf9
+      internalID: 1744994023
       vertices: []
       indices: 
       edges: []
@@ -299,7 +299,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 296281f0d31169047a71f861e1d87a24
+    spriteID: 9f8ad3d9c3829a64e9c3f8184e1fa06d
     internalID: 0
     vertices: []
     indices: 
@@ -314,7 +314,7 @@ TextureImporter:
       Smoke-Sheet_2: 4336332254551780690
       Smoke-Sheet_3: 6432433507561761962
       Smoke-Sheet_4: -6472314962850084079
-      Smoke-Sheet_5: 370388538
+      Smoke-Sheet_5: 1744994023
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
