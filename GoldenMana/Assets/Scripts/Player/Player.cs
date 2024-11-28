@@ -1,9 +1,15 @@
 using UnityEngine;
 
-public class Player : MonoBehaviour
+public class Player : MonoBehaviour , IHasDialogue
 {
     public static Player Instance { get; private set; }
 
+    // Dialogue Interface Variables
+    public string[] Dialogue { get; set; }
+    public bool DialogueDone { get; set; }
+    public bool HasChoice { get; set; }
+
+    // Serializables
     [SerializeField] private PlayerAttack playerAttack;
     [SerializeField] private GameObject deathParticlesPrefab;
 
@@ -17,6 +23,10 @@ public class Player : MonoBehaviour
         Instance = this;
 
         health = maxHealth;
+
+        // Interface initialization
+        Dialogue = new string[] { "You have died..", "Try again?" };
+        HasChoice = true; // Death choice
     }
 
     private void Update() {
@@ -25,6 +35,7 @@ public class Player : MonoBehaviour
         if (health <= 0) {
             GameObject deathParticles = Instantiate(deathParticlesPrefab, transform.position, Quaternion.identity);
             Destroy(deathParticles, 1f);
+            ((IHasDialogue)this).StartDialogue();
             Destroy(gameObject);
         }
     }
@@ -34,6 +45,7 @@ public class Player : MonoBehaviour
             health = 0;
         }
     }
+
     // Called once by chest
     public void RecieveItem(string itemID) {
         switch (itemID) {

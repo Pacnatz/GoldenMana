@@ -187,6 +187,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "SelectChoice",
+                    "type": "Button",
+                    "id": "f50dd906-fc63-4c04-a436-12c3d08fc114",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -198,6 +207,28 @@
                     "processors": "",
                     "groups": "",
                     "action": "Continue",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b50e13cd-0921-421d-a335-0e4079969088",
+                    "path": "<Keyboard>/leftArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SelectChoice",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "cf1a9f0c-4bd6-44f7-b0a8-47fb38c2ffa1",
+                    "path": "<Keyboard>/rightArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SelectChoice",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

@@ -10,7 +10,7 @@ public class Chest : BaseInteractable , IHasDialogue
 
     public string[] Dialogue { get; set; }
     public bool DialogueDone { get; set; }
-
+    public bool HasChoice { get; set; }
 
     private bool isOpened = false;
 

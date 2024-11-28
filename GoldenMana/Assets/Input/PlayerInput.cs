@@ -210,6 +210,15 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""SelectChoice"",
+                    ""type"": ""Button"",
+                    ""id"": ""f50dd906-fc63-4c04-a436-12c3d08fc114"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -221,6 +230,28 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Continue"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b50e13cd-0921-421d-a335-0e4079969088"",
+                    ""path"": ""<Keyboard>/leftArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""SelectChoice"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""cf1a9f0c-4bd6-44f7-b0a8-47fb38c2ffa1"",
+                    ""path"": ""<Keyboard>/rightArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""SelectChoice"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -239,6 +270,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Continue = m_UI.FindAction("Continue", throwIfNotFound: true);
+        m_UI_SelectChoice = m_UI.FindAction("SelectChoice", throwIfNotFound: true);
     }
 
     ~@PlayerInput()
@@ -385,11 +417,13 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
     private readonly InputActionMap m_UI;
     private List<IUIActions> m_UIActionsCallbackInterfaces = new List<IUIActions>();
     private readonly InputAction m_UI_Continue;
+    private readonly InputAction m_UI_SelectChoice;
     public struct UIActions
     {
         private @PlayerInput m_Wrapper;
         public UIActions(@PlayerInput wrapper) { m_Wrapper = wrapper; }
         public InputAction @Continue => m_Wrapper.m_UI_Continue;
+        public InputAction @SelectChoice => m_Wrapper.m_UI_SelectChoice;
         public InputActionMap Get() { return m_Wrapper.m_UI; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -402,6 +436,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @Continue.started += instance.OnContinue;
             @Continue.performed += instance.OnContinue;
             @Continue.canceled += instance.OnContinue;
+            @SelectChoice.started += instance.OnSelectChoice;
+            @SelectChoice.performed += instance.OnSelectChoice;
+            @SelectChoice.canceled += instance.OnSelectChoice;
         }
 
         private void UnregisterCallbacks(IUIActions instance)
@@ -409,6 +446,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @Continue.started -= instance.OnContinue;
             @Continue.performed -= instance.OnContinue;
             @Continue.canceled -= instance.OnContinue;
+            @SelectChoice.started -= instance.OnSelectChoice;
+            @SelectChoice.performed -= instance.OnSelectChoice;
+            @SelectChoice.canceled -= instance.OnSelectChoice;
         }
 
         public void RemoveCallbacks(IUIActions instance)
@@ -437,5 +477,6 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
     public interface IUIActions
     {
         void OnContinue(InputAction.CallbackContext context);
+        void OnSelectChoice(InputAction.CallbackContext context);
     }
 }

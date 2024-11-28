@@ -9,6 +9,7 @@ public class GameInput : MonoBehaviour
     public event EventHandler OnJumpCanceled;
     public event EventHandler OnInteractPressed;
     public event EventHandler OnUIContinuePressed;
+    public event EventHandler OnUISelectChoicePressed;
 
     private PlayerInput playerInput;
     
@@ -33,10 +34,12 @@ public class GameInput : MonoBehaviour
         playerInput.Player.Interact.performed += Interact_performed;
 
         playerInput.UI.Continue.performed += Continue_performed;
+        playerInput.UI.SelectChoice.performed += SelectChoice_performed;
         
     }
 
-    
+
+
     private void Jump_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj) {
         OnJumpPressed?.Invoke(this, EventArgs.Empty);
     }
@@ -77,6 +80,10 @@ public class GameInput : MonoBehaviour
 
     private void Continue_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj) {
         OnUIContinuePressed?.Invoke(this, EventArgs.Empty);
+    }
+
+    private void SelectChoice_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj) {
+        OnUISelectChoicePressed?.Invoke(this, EventArgs.Empty);
     }
 
 
