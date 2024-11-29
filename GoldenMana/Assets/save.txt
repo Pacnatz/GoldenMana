@@ -1,0 +1,1 @@
+{"Health":10.0,"FireballUnlocked":true,"SavePos":{"x":7.889999866485596,"y":9.050000190734864},"SceneList":[{"SceneName":"CaveLevel1","OpenedChestPos":[{"x":9.5,"y":8.5}],"BrokenCellPos":[]}],"LastScene":{"SceneName":"CaveLevel1","OpenedChestPos":[{"x":9.5,"y":8.5}],"BrokenCellPos":[]}}

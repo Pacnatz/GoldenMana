@@ -48,6 +48,10 @@ public class Fireball : MonoBehaviour
             Tilemap breakableTileMap = hit.collider.transform.GetComponent<Tilemap>();
             var worldHitPos = hit.point + direction * projectileWidth;
             var cellHitPos = breakableTileMap.WorldToCell(worldHitPos);
+
+            // Saving broken blocks
+            SaveManager.Instance.selectedScene.BrokenCellPos.Add(cellHitPos);
+
             breakableTileMap.SetTile(cellHitPos, null);
             GameObject smokeParticles = Instantiate(smokeParticlePrefab, worldHitPos, Quaternion.identity);
             Destroy(smokeParticles, 1f);

@@ -150,7 +150,7 @@ public class DialogueUI : MonoBehaviour {
             case 0:
                 // Reset to last save file
                 choice = 0;
-                SceneManager.LoadScene("CaveLevel1");
+                SaveManager.Instance.Load();
                 break;
             case 1:
                 choice = 0;

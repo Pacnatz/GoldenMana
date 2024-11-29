@@ -16,9 +16,15 @@ public class SaveManager : MonoBehaviour {
 
     // Scene data struct
     [System.Serializable]
-    public class SceneData {
+    public class SceneData{
+        public SceneData(string sceneName) {
+            SceneName = sceneName;
+            OpenedChestPos = new();
+            BrokenCellPos = new();
+        }
         public string SceneName;
-        public List<Vector2> openedChestPos;
+        public List<Vector2> OpenedChestPos;
+        public List<Vector3Int> BrokenCellPos;
     }
 
 
@@ -69,27 +75,19 @@ public class SaveManager : MonoBehaviour {
         }
         // If haven't found scene in list, add it and select that scene
         if (!sceneFound) {
-            SceneData newScene = new SceneData { SceneName = loadedScene.name };
+            SceneData newScene = new SceneData(loadedScene.name);
             sceneList.Add(newScene);
             selectedScene = newScene;
-            selectedScene.openedChestPos = new();
         }
         // Delay then load scene data
-        if (selectedScene.openedChestPos.Count > 0) {
-            Debug.Log(selectedScene.openedChestPos[0]);
-        }
         LoadSceneData();
     }
 
     private void LoadSceneData() {
-        foreach(Vector2 chest in selectedScene.openedChestPos) {
-            
-        }
+        // If we need to load extra data
     }
     private void ShowSceneData() {
-        foreach (Vector2 chest in selectedScene.openedChestPos) {
-            Debug.Log(chest);
-        }
+        // Debugging purposes
     }
 
     // ############################################################################## SAVE AND LOAD SYSTEM
@@ -97,9 +95,11 @@ public class SaveManager : MonoBehaviour {
         // Save data here
         SaveObject saveObject = new SaveObject {
             Health = 10,
+            FireballUnlocked = Player.Instance.fireballUnlocked,
             SavePos = savePos,
             SceneList = sceneList,
             LastScene = selectedScene
+            
         };
 
         // Encrypt save data
@@ -125,7 +125,7 @@ public class SaveManager : MonoBehaviour {
     }
 
     public void Load() {
-        if (File.Exists(Application.dataPath + SAVE_PATH) && File.Exists(Application.dataPath + KEY_PATH)) {
+        if (File.Exists(Application.dataPath + SAVE_PATH)){//&& File.Exists(Application.dataPath + KEY_PATH)) {
             /*
             // Load Key Data
             string keyJson = File.ReadAllText(Application.dataPath + KEY_PATH);
@@ -142,14 +142,14 @@ public class SaveManager : MonoBehaviour {
             // Load data here
             // health = saveObject.health;
 
-            StartCoroutine(LoadPlayer(saveObject.SceneList, saveObject.SavePos, saveObject.LastScene));
+            StartCoroutine(LoadPlayer(saveObject, saveObject.SceneList, saveObject.LastScene, saveObject.SavePos ));
         }
         else {
             Debug.LogWarning("Key not found");
         }
         
     }
-    private IEnumerator LoadPlayer(List<SceneData> sceneList, Vector2 savePos, SceneData lastScene) {
+    private IEnumerator LoadPlayer(SaveObject saveObject, List<SceneData> sceneList, SceneData lastScene, Vector2 savePos) {
         // Scene loading
         this.sceneList = sceneList;
         selectedScene = lastScene;
@@ -158,12 +158,16 @@ public class SaveManager : MonoBehaviour {
         yield return new WaitForSeconds(sceneDelay);
         // Player loading
         PlayerMove.Instance.gameObject.transform.position = savePos;
+        if (saveObject.FireballUnlocked) {
+            Player.Instance.UnlockFireSpell();
+        }
     }
 
     // Save data class
     public class SaveObject {
         // Player saving
         public float Health;
+        public bool FireballUnlocked;
         public Vector2 SavePos;
         // Scene saving
         public List<SceneData> SceneList;

@@ -4,6 +4,8 @@ public class Player : MonoBehaviour , IHasDialogue
 {
     public static Player Instance { get; private set; }
 
+    // Attack Unlock Variables
+    public bool fireballUnlocked { get; private set; }
     // Dialogue Interface Variables
     public string[] Dialogue { get; set; }
     public bool HasChoice { get; set; }
@@ -49,7 +51,7 @@ public class Player : MonoBehaviour , IHasDialogue
     public void RecieveItem(string itemID) {
         switch (itemID) {
             case "FireballSpell":
-                playerAttack.UnlockFireSpell();
+                UnlockFireSpell();
                 break;
             default:
                 Debug.LogError($"{itemID} is not a valid item");
@@ -57,7 +59,14 @@ public class Player : MonoBehaviour , IHasDialogue
         }
     }
 
+    public void UnlockFireSpell() {
+        playerAttack.UnlockFireSpell();
+        fireballUnlocked = true;
+    }
+
     void IHasDialogue.DialogueDone() {
         // Add actions here if needed
     }
+
+
 }

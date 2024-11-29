@@ -59,7 +59,7 @@ public class PlayerAttack : MonoBehaviour
         if (attackX != 0 && canFire) {
             // Handle X axis attack
             Vector3 xOffset = new Vector3(.5f, 0, 0);
-            if (attackX > 0 && PlayerMove.Instance.GetMoveDirectionStaticX() >= 0) {
+            if (attackX > 0 && PlayerMove.Instance.GetMoveDirectionStaticX() > 0) {
                 GameObject fireball = Instantiate(fireballPrefab, transform.position + xOffset, Quaternion.identity);
                 if (fireball.TryGetComponent<Fireball>(out var fireballScript)) {  // If fireball script is attached
                     fireballScript.InitializeFireball(this, new Vector2(attackX, 0));
@@ -67,7 +67,7 @@ public class PlayerAttack : MonoBehaviour
                 fireballsActive++;
                 OnAttackPressed?.Invoke(this, new OnAttackPressedEventArgs { AttackDir = new Vector2(attackX, 0) });
             }
-            else if (attackX < 0 && PlayerMove.Instance.GetMoveDirectionStaticX() <= 0) {
+            else if (attackX < 0 && PlayerMove.Instance.GetMoveDirectionStaticX() < 0) {
                 GameObject fireball = Instantiate(fireballPrefab, transform.position - xOffset, Quaternion.identity);
                 if (fireball.TryGetComponent<Fireball>(out var fireballScript)) {  // If fireball script is attached
                     fireballScript.InitializeFireball(this, new Vector2(attackX, 0));
