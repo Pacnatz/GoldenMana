@@ -41,6 +41,7 @@ public class DialogueUI : MonoBehaviour {
             DontDestroyOnLoad(gameObject);
         }
         dialogueBox.SetActive(false);
+        dialogueChoiceBox.SetActive(false);
         choiceArrow.anchoredPosition = arrowYesPos;
     }
 
