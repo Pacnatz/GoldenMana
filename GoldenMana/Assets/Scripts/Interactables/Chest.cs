@@ -11,7 +11,7 @@ public class Chest : BaseInteractable , IHasDialogue
     public string[] Dialogue { get; set; }
     public bool HasChoice { get; set; }
 
-    private bool isOpened = false;
+    [HideInInspector] public bool isOpened = false;
 
 
     private void Awake() {
@@ -19,13 +19,14 @@ public class Chest : BaseInteractable , IHasDialogue
     }
 
     private void Start() {
-        GameInput.Instance.OnInteractPressed += Instance_OnInteractPressed1;
+        GameInput.Instance.OnInteractPressed += Instance_OnInteractPressed;
     }
 
-    private void Instance_OnInteractPressed1(object sender, EventArgs e) {
+    private void Instance_OnInteractPressed(object sender, EventArgs e) {
         if (!isOpened && hasPlayer) {
             isOpened = true;
             sr.sprite = openedChestSprite;
+            SaveManager.Instance.selectedScene.openedChestPos.Add(transform.position);
             // Call Dialog UI
             ((IHasDialogue)this).StartDialogue();
         }

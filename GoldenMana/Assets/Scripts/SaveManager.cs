@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Collections;
+using System.Collections.Generic;
 using System.Security.Cryptography;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -10,10 +11,22 @@ public class SaveManager : MonoBehaviour {
 
     public static SaveManager Instance { get; private set; }
 
+    private List<SceneData> sceneList = new List<SceneData>();
+    [HideInInspector] public SceneData selectedScene;
+
+    // Scene data struct
+    [System.Serializable]
+    public struct SceneData {
+        public string SceneName;
+        public List<Vector2> openedChestPos;
+    }
+
+
+    // Save paths
     private const string SAVE_PATH = "/save.txt";
     private const string KEY_PATH = "/key.txt";
 
-    private void Awake() {
+    private void Awake() { // Called every time scene is reloaded
         if (Instance != null) {
             Destroy(gameObject);
         }
@@ -23,25 +36,65 @@ public class SaveManager : MonoBehaviour {
         }
     }
 
+    private void Start() { // Called once at start of play
+        SceneManager.sceneLoaded += SceneManager_sceneLoaded;
+        SceneData newScene = new SceneData { SceneName = SceneManager.GetActiveScene().name };
+        sceneList.Add(newScene);
+        selectedScene = newScene;
+        selectedScene.openedChestPos = new();
+    }
+
+
     // Testing
     private void Update() {
         if (Input.GetKeyDown(KeyCode.L)) {
             Load();
         }
+        if (Input.GetKeyDown(KeyCode.I)) {
+            SceneManager.LoadScene("CaveLevel1");
+        }
+        if (Input.GetKeyDown(KeyCode.O)) {
+            ShowSceneData();
+        }
     }
 
+    // ############################################################################## SCENE DATA SYSTEM
+    private void SceneManager_sceneLoaded(Scene loadedScene, LoadSceneMode sceneMode) {
+        bool sceneFound = false;
+        // Select our scene
+        foreach (SceneData scene in sceneList) {
+            if (scene.SceneName == loadedScene.name) {
+                sceneFound = true;
+                selectedScene = scene;
+            }
+        }
+        // If haven't found scene in list, add it and select that scene
+        if (!sceneFound) {
+            SceneData newScene = new SceneData { SceneName = loadedScene.name };
+            sceneList.Add(newScene);
+            selectedScene = newScene;
+            selectedScene.openedChestPos = new();
+        }
+    }
+
+    private void ShowSceneData() {
+        foreach (Vector2 pos in selectedScene.openedChestPos) {
+            Debug.Log(pos);
+        }
+    }
 
     // ############################################################################## SAVE AND LOAD SYSTEM
-    public void Save(Vector2 savePos, string scene) {
+    public void Save(Vector2 savePos) {
         // Save data here
         SaveObject saveObject = new SaveObject {
             health = 10,
             savePos = savePos,
-            scene = scene
+            scene = selectedScene
         };
 
         // Encrypt save data
         string json = JsonUtility.ToJson(saveObject);
+
         string encryptedSaveJson = EncryptDataWithAes(json, out string keyBase64, out string vectorBase64);
 
         // Write key data
@@ -53,12 +106,16 @@ public class SaveManager : MonoBehaviour {
 
         // Save game data to txt file
         File.WriteAllText(Application.dataPath + SAVE_PATH, encryptedSaveJson);
+
         // Save key data to txt file
         File.WriteAllText(Application.dataPath + KEY_PATH, keyJson);
+
+
     }
 
     public void Load() {
         if (File.Exists(Application.dataPath + SAVE_PATH) && File.Exists(Application.dataPath + KEY_PATH)) {
+
             // Load Key Data
             string keyJson = File.ReadAllText(Application.dataPath + KEY_PATH);
             KeyObject keyObject = JsonUtility.FromJson<KeyObject>(keyJson);
@@ -67,7 +124,6 @@ public class SaveManager : MonoBehaviour {
             string json = DecryptDataWithAes(encryptedSaveJson, keyObject.keyBase64, keyObject.vectorBase64);
 
             SaveObject saveObject = JsonUtility.FromJson<SaveObject>(json);
-
             // Load data here
             // health = saveObject.health;
 
@@ -78,8 +134,8 @@ public class SaveManager : MonoBehaviour {
         }
         
     }
-    private IEnumerator LoadPlayer(string scene, Vector2 savePos) {
-        SceneManager.LoadScene(scene);
+    private IEnumerator LoadPlayer(SceneData scene, Vector2 savePos) {
+        SceneManager.LoadScene(scene.SceneName);
         float sceneDelay = .1f;
         yield return new WaitForSeconds(sceneDelay);
         PlayerMove.Instance.gameObject.transform.position = savePos;
@@ -90,7 +146,7 @@ public class SaveManager : MonoBehaviour {
     public class SaveObject {
         public float health;
         public Vector2 savePos;
-        public string scene;
+        public SceneData scene;
     }
     // Class to store keys
     public class KeyObject {

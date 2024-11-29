@@ -20,6 +20,6 @@ public class SavePoint : BaseInteractable , IHasDialogue{
     }
 
     public void DialogueDone() {
-        SaveManager.Instance.Save(transform.position, sceneName);
+        SaveManager.Instance.Save(transform.position);
     }
 }
