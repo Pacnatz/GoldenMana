@@ -11,20 +11,24 @@ public class SaveManager : MonoBehaviour {
 
     public static SaveManager Instance { get; private set; }
 
-    private List<SceneData> sceneList = new List<SceneData>();
+    [HideInInspector] public List<SceneData> sceneList = new List<SceneData>();
     [HideInInspector] public SceneData selectedScene;
 
-    // Scene data struct
+    private SaveObject saveObject;
+
+    // Scene data class
     [System.Serializable]
     public class SceneData{
         public SceneData(string sceneName) {
             SceneName = sceneName;
             OpenedChestPos = new();
             BrokenCellPos = new();
+            PlayerLoadPos = Vector2.zero;
         }
         public string SceneName;
         public List<Vector2> OpenedChestPos;
         public List<Vector3Int> BrokenCellPos;
+        public Vector2 PlayerLoadPos;
     }
 
 
@@ -84,10 +88,14 @@ public class SaveManager : MonoBehaviour {
     }
 
     private void LoadSceneData() {
-        // If we need to load extra data
+        
     }
     private void ShowSceneData() {
         // Debugging purposes
+    }
+
+    public void SetPlayerPosition(Vector2 playerLoadPos) {
+        Player.Instance.transform.position = playerLoadPos;
     }
 
     // ############################################################################## SAVE AND LOAD SYSTEM
@@ -138,29 +146,50 @@ public class SaveManager : MonoBehaviour {
             
             SaveObject saveObject = JsonUtility.FromJson<SaveObject>(json);
             */
-            SaveObject saveObject = JsonUtility.FromJson<SaveObject>(encryptedSaveJson);
+            saveObject = JsonUtility.FromJson<SaveObject>(encryptedSaveJson);
             // Load data here
             // health = saveObject.health;
 
-            StartCoroutine(LoadPlayer(saveObject, saveObject.SceneList, saveObject.LastScene, saveObject.SavePos ));
+            StartCoroutine(LoadPlayerFromSave());
         }
         else {
             Debug.LogWarning("Key not found");
         }
         
     }
-    private IEnumerator LoadPlayer(SaveObject saveObject, List<SceneData> sceneList, SceneData lastScene, Vector2 savePos) {
+
+    private IEnumerator LoadPlayerFromSave() {
         // Scene loading
-        this.sceneList = sceneList;
-        selectedScene = lastScene;
+        sceneList = saveObject.SceneList;
+        selectedScene = saveObject.LastScene;
+        
         SceneManager.LoadScene(selectedScene.SceneName);
         float sceneDelay = .1f;
         yield return new WaitForSeconds(sceneDelay);
         // Player loading
-        PlayerMove.Instance.gameObject.transform.position = savePos;
+        PlayerMove.Instance.gameObject.transform.position = saveObject.SavePos;
         if (saveObject.FireballUnlocked) {
             Player.Instance.UnlockFireSpell();
         }
+    }
+
+    public void LoadSceneFromDoor(string sceneName, Vector2 loadPos) {
+        // Need to call coroutine from this function or else won't work
+        StartCoroutine(LoadPlayerFromScene(sceneName, loadPos));
+    }
+
+    private IEnumerator LoadPlayerFromScene(string sceneName, Vector2 loadPos) {
+        SceneManager.LoadScene(sceneName);
+        float sceneDelay = .1f;
+        yield return new WaitForSeconds(sceneDelay);
+        // Player loading
+        PlayerMove.Instance.gameObject.transform.position = loadPos;
+        if (saveObject != null) {
+            if (saveObject.FireballUnlocked) {
+                Player.Instance.UnlockFireSpell();
+            }
+        }
+        
     }
 
     // Save data class
