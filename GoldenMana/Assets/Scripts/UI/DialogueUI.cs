@@ -118,7 +118,7 @@ public class DialogueUI : MonoBehaviour {
             dialogueChoiceBox.SetActive(false);
         }
         dialogueBox.SetActive(false);
-        dialogueParent.DialogueDone = true;
+        dialogueParent.DialogueDone();
         GameInput.Instance.UnPausePlayer();
     }
 

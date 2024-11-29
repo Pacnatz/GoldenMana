@@ -1,16 +1,22 @@
+using System;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+public class Door : BaseInteractable {
 
-public class Door : MonoBehaviour
-{
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
+    [SerializeField] private string sceneToLoad;
+
+    private void Start() {
+        GameInput.Instance.OnInteractPressed += Instance_OnInteractPressed1;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+    private void Instance_OnInteractPressed1(object sender, EventArgs e) {
+        if (hasPlayer) {
+
+            // Save scene data
+
+            // Load scene data
+            SceneManager.LoadScene(sceneToLoad);
+        }
     }
+
 }

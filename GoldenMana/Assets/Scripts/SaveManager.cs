@@ -10,8 +10,6 @@ public class SaveManager : MonoBehaviour {
 
     public static SaveManager Instance { get; private set; }
 
-    [SerializeField] private GameObject playerPrefab;
-
     private const string SAVE_PATH = "/save.txt";
     private const string KEY_PATH = "/key.txt";
 

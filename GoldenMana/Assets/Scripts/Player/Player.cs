@@ -6,7 +6,6 @@ public class Player : MonoBehaviour , IHasDialogue
 
     // Dialogue Interface Variables
     public string[] Dialogue { get; set; }
-    public bool DialogueDone { get; set; }
     public bool HasChoice { get; set; }
 
     // Serializables
@@ -56,5 +55,9 @@ public class Player : MonoBehaviour , IHasDialogue
                 Debug.LogError($"{itemID} is not a valid item");
                 break;
         }
+    }
+
+    void IHasDialogue.DialogueDone() {
+        // Add actions here if needed
     }
 }

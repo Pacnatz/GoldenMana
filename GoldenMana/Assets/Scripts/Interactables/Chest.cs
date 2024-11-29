@@ -9,7 +9,6 @@ public class Chest : BaseInteractable , IHasDialogue
     [SerializeField] private string[] dialogue;
 
     public string[] Dialogue { get; set; }
-    public bool DialogueDone { get; set; }
     public bool HasChoice { get; set; }
 
     private bool isOpened = false;
@@ -19,21 +18,22 @@ public class Chest : BaseInteractable , IHasDialogue
         Dialogue = dialogue; // Assign dialogue to the interface
     }
 
-    private void Update() {
-        if (DialogueDone) {
-            DialogueDone = false;
-            Player.Instance.RecieveItem(outputItem);
-        }
+    private void Start() {
+        GameInput.Instance.OnInteractPressed += Instance_OnInteractPressed1;
     }
 
-
-    protected override void Instance_OnInteractPressed(object sender, System.EventArgs e) {
+    private void Instance_OnInteractPressed1(object sender, EventArgs e) {
         if (!isOpened && hasPlayer) {
             isOpened = true;
             sr.sprite = openedChestSprite;
-
             // Call Dialog UI
             ((IHasDialogue)this).StartDialogue();
         }
     }
+
+
+    public void DialogueDone() {
+        Player.Instance.RecieveItem(outputItem);
+    }
+
 }
