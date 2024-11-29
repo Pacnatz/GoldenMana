@@ -20,6 +20,12 @@ public class Chest : BaseInteractable , IHasDialogue
 
     private void Start() {
         GameInput.Instance.OnInteractPressed += Instance_OnInteractPressed;
+        foreach (Vector2 chestPos in SaveManager.Instance.selectedScene.openedChestPos) {
+            if (Vector2.Distance(transform.position, chestPos) < 1) {
+                isOpened = true;
+                sr.sprite = openedChestSprite;
+            }
+        }
     }
 
     private void Instance_OnInteractPressed(object sender, EventArgs e) {
@@ -31,7 +37,6 @@ public class Chest : BaseInteractable , IHasDialogue
             ((IHasDialogue)this).StartDialogue();
         }
     }
-
 
     public void DialogueDone() {
         Player.Instance.RecieveItem(outputItem);

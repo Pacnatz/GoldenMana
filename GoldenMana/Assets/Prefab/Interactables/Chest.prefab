@@ -97,6 +97,7 @@ MonoBehaviour:
   outputItem: FireballSpell
   dialogue:
   - You found the Fire Ball Spell!
+  isOpened: 0
 --- !u!1 &3598415776857762231
 GameObject:
   m_ObjectHideFlags: 0

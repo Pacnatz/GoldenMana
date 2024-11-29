@@ -16,7 +16,7 @@ public class SaveManager : MonoBehaviour {
 
     // Scene data struct
     [System.Serializable]
-    public struct SceneData {
+    public class SceneData {
         public string SceneName;
         public List<Vector2> openedChestPos;
     }
@@ -26,7 +26,7 @@ public class SaveManager : MonoBehaviour {
     private const string SAVE_PATH = "/save.txt";
     private const string KEY_PATH = "/key.txt";
 
-    private void Awake() { // Called every time scene is reloaded
+    private void Awake() { 
         if (Instance != null) {
             Destroy(gameObject);
         }
@@ -36,12 +36,11 @@ public class SaveManager : MonoBehaviour {
         }
     }
 
-    private void Start() { // Called once at start of play
+    private void Start() { 
         SceneManager.sceneLoaded += SceneManager_sceneLoaded;
-        SceneData newScene = new SceneData { SceneName = SceneManager.GetActiveScene().name };
-        sceneList.Add(newScene);
-        selectedScene = newScene;
-        selectedScene.openedChestPos = new();
+
+        // Runs for the first scene when entering playmode
+        SceneManager_sceneLoaded(SceneManager.GetActiveScene(), LoadSceneMode.Single);
     }
 
 
@@ -75,11 +74,21 @@ public class SaveManager : MonoBehaviour {
             selectedScene = newScene;
             selectedScene.openedChestPos = new();
         }
+        // Delay then load scene data
+        if (selectedScene.openedChestPos.Count > 0) {
+            Debug.Log(selectedScene.openedChestPos[0]);
+        }
+        LoadSceneData();
     }
 
+    private void LoadSceneData() {
+        foreach(Vector2 chest in selectedScene.openedChestPos) {
+            
+        }
+    }
     private void ShowSceneData() {
-        foreach (Vector2 pos in selectedScene.openedChestPos) {
-            Debug.Log(pos);
+        foreach (Vector2 chest in selectedScene.openedChestPos) {
+            Debug.Log(chest);
         }
     }
 
@@ -87,14 +96,15 @@ public class SaveManager : MonoBehaviour {
     public void Save(Vector2 savePos) {
         // Save data here
         SaveObject saveObject = new SaveObject {
-            health = 10,
-            savePos = savePos,
-            scene = selectedScene
+            Health = 10,
+            SavePos = savePos,
+            SceneList = sceneList,
+            LastScene = selectedScene
         };
 
         // Encrypt save data
         string json = JsonUtility.ToJson(saveObject);
-
+        /*
         string encryptedSaveJson = EncryptDataWithAes(json, out string keyBase64, out string vectorBase64);
 
         // Write key data
@@ -109,44 +119,55 @@ public class SaveManager : MonoBehaviour {
 
         // Save key data to txt file
         File.WriteAllText(Application.dataPath + KEY_PATH, keyJson);
-
+        */
+        File.WriteAllText(Application.dataPath + SAVE_PATH, json);
 
     }
 
     public void Load() {
         if (File.Exists(Application.dataPath + SAVE_PATH) && File.Exists(Application.dataPath + KEY_PATH)) {
-
+            /*
             // Load Key Data
             string keyJson = File.ReadAllText(Application.dataPath + KEY_PATH);
             KeyObject keyObject = JsonUtility.FromJson<KeyObject>(keyJson);
             // Load Save Data
+            */
             string encryptedSaveJson = File.ReadAllText(Application.dataPath + SAVE_PATH);
+            /*
             string json = DecryptDataWithAes(encryptedSaveJson, keyObject.keyBase64, keyObject.vectorBase64);
-
+            
             SaveObject saveObject = JsonUtility.FromJson<SaveObject>(json);
+            */
+            SaveObject saveObject = JsonUtility.FromJson<SaveObject>(encryptedSaveJson);
             // Load data here
             // health = saveObject.health;
 
-            StartCoroutine(LoadPlayer(saveObject.scene, saveObject.savePos));
+            StartCoroutine(LoadPlayer(saveObject.SceneList, saveObject.SavePos, saveObject.LastScene));
         }
         else {
             Debug.LogWarning("Key not found");
         }
         
     }
-    private IEnumerator LoadPlayer(SceneData scene, Vector2 savePos) {
-        SceneManager.LoadScene(scene.SceneName);
+    private IEnumerator LoadPlayer(List<SceneData> sceneList, Vector2 savePos, SceneData lastScene) {
+        // Scene loading
+        this.sceneList = sceneList;
+        selectedScene = lastScene;
+        SceneManager.LoadScene(selectedScene.SceneName);
         float sceneDelay = .1f;
         yield return new WaitForSeconds(sceneDelay);
+        // Player loading
         PlayerMove.Instance.gameObject.transform.position = savePos;
-
     }
 
     // Save data class
     public class SaveObject {
-        public float health;
-        public Vector2 savePos;
-        public SceneData scene;
+        // Player saving
+        public float Health;
+        public Vector2 SavePos;
+        // Scene saving
+        public List<SceneData> SceneList;
+        public SceneData LastScene;
     }
     // Class to store keys
     public class KeyObject {
