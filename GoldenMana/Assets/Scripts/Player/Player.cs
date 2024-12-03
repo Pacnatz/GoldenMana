@@ -62,6 +62,7 @@ public class Player : MonoBehaviour , IHasDialogue
     public void UnlockFireSpell() {
         playerAttack.UnlockFireSpell();
         fireballUnlocked = true;
+        GameManager.Instance.FireballUnlocked = true;
     }
 
     void IHasDialogue.DialogueDone() {

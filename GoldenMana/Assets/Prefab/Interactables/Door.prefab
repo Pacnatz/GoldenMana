@@ -180,3 +180,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sceneToLoad: CaveLevel2
+  playerLoadPos: {x: 0, y: 0}

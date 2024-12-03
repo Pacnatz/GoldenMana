@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 public class Door : BaseInteractable {
@@ -13,9 +14,14 @@ public class Door : BaseInteractable {
         if (hasPlayer) {
             // Load Scene
             // Set player position
-            SaveManager.Instance.LoadSceneFromDoor(sceneToLoad, playerLoadPos);
+            SceneTransitions.Instance.EndScene();
+            StartCoroutine(LoadNextScene(.5f));
         }
 
     }
 
+    private IEnumerator LoadNextScene(float sceneDelay) {
+        yield return new WaitForSeconds(sceneDelay);
+        SaveManager.Instance.LoadSceneFromDoor(sceneToLoad, playerLoadPos);
+    }
 }

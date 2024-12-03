@@ -84,11 +84,30 @@ public class SaveManager : MonoBehaviour {
             selectedScene = newScene;
         }
         // Delay then load scene data
-        LoadSceneData();
+        StartCoroutine(LoadSceneData());
+
+
     }
 
-    private void LoadSceneData() {
+
+
+    private IEnumerator LoadSceneData() {
+        yield return new WaitForSeconds(.1f);
+        if (GameManager.Instance.FireballUnlocked) {
+            Player.Instance.UnlockFireSpell();
+        }
+        if (GameInput.Instance) {
+            GameInput.Instance.PausePlayer();
+            StartCoroutine(OnTransitionFinished(.5f));
+        }
         
+        SceneTransitions.Instance.StartScene();
+        
+    }
+
+    private IEnumerator OnTransitionFinished(float sceneDelay) {
+        yield return new WaitForSeconds(sceneDelay);
+        GameInput.Instance.UnPausePlayer();
     }
     private void ShowSceneData() {
         // Debugging purposes
@@ -159,6 +178,8 @@ public class SaveManager : MonoBehaviour {
     }
 
     private IEnumerator LoadPlayerFromSave() {
+        // Scene Transition
+        SceneTransitions.Instance.SetBlack();
         // Scene loading
         sceneList = saveObject.SceneList;
         selectedScene = saveObject.LastScene;
