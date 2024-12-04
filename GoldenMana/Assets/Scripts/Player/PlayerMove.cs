@@ -10,6 +10,10 @@ public class PlayerMove : MonoBehaviour
     public class OnJumpActionEventArgs : EventArgs {
         public bool IsJumping;
     }
+    public event EventHandler<OnPlayerHitEventArgs> OnPlayerHit;
+    public class OnPlayerHitEventArgs : EventArgs {
+        public float Damage;
+    }
 
     private LayerMask floorLayer;
 
@@ -22,7 +26,9 @@ public class PlayerMove : MonoBehaviour
     private bool onSlopeRight = false;
     private bool isJumping = false;
     private float startJumpHeight;
-    
+
+    private bool vulnerable = true;
+    private float vulnerabilityTimer;
 
     private void Awake() {
         if (Instance != null) {
@@ -50,6 +56,15 @@ public class PlayerMove : MonoBehaviour
 
         if (moveDir != 0) { // Sets which way player is facing
             moveDirStatic = moveDir;
+        }
+
+
+        // Resets vulnerability
+        if (!vulnerable) {
+            vulnerabilityTimer -= Time.deltaTime;
+            if (vulnerabilityTimer <= 0) {
+                vulnerable = true;
+            }
         }
 
     }
@@ -163,6 +178,27 @@ public class PlayerMove : MonoBehaviour
     }
 
     public float GetMoveDirectionStaticX() => moveDirStatic;  // Get facing direction of player
+
+
+
+    private void OnCollisionEnter2D(Collision2D collision) {
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Monster")) {
+            // Sets invulnerability
+            if (vulnerable) {
+                vulnerable = false;
+                vulnerabilityTimer = .5f;
+                // Adds backwards force to player
+                collision.gameObject.TryGetComponent<BaseMonster>(out var monsterScript);
+                float backMultiplier = 2;
+                float backForce = (transform.position - collision.transform.position).normalized.x * backMultiplier;
+                float upwardForce = 2;
+                rb.AddForce(new Vector2(backForce, upwardForce), ForceMode2D.Impulse);
+                // Fire event to player script
+                OnPlayerHit?.Invoke(this, new OnPlayerHitEventArgs { Damage = monsterScript.Damage });
+            }
+            
+        }
+    }
 
 
     private void Input_OnJumpPressed(object sender, EventArgs e) {

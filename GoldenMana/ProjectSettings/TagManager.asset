@@ -15,7 +15,7 @@ TagManager:
   - Floor
   - Breakable
   - Spikes
-  - 
+  - Monster
   - 
   - 
   - 
@@ -49,6 +49,9 @@ TagManager:
     locked: 0
   - name: Player
     uniqueID: 3461416039
+    locked: 0
+  - name: Monster
+    uniqueID: 567035249
     locked: 0
   m_RenderingLayers:
   - Default

@@ -66,6 +66,12 @@ public class Fireball : MonoBehaviour
             Instantiate(explosionPrefab, transform.position, Quaternion.identity);
             Destroy(gameObject);
         }
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Monster")) {
+            collision.gameObject.TryGetComponent<BaseMonster>(out var monsterScript);
+            monsterScript.TakeDamage(1f);
+            Instantiate(explosionPrefab, transform.position, Quaternion.identity);
+            Destroy(gameObject);
+        }
     }
     private void OnDestroy() {
         

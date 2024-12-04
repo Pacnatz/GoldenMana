@@ -20,9 +20,13 @@ public class PlayerVisual : MonoBehaviour
     private Vector2 attackDir;
 
     private float attackVectorX;
-    
+
+    private bool isFlashing = false;
+    private float flashAmount;
+
     private void Start() {
         PlayerMove.Instance.OnJumpAction += PlayerInstance_OnJumpAction;
+        PlayerMove.Instance.OnPlayerHit += Instance_OnPlayerHit;
         attackScript.OnAttackPressed += AttackScript_OnAttackPressed;
     }
 
@@ -109,6 +113,11 @@ public class PlayerVisual : MonoBehaviour
         else {
             cameraFollow.FollowOffset.x = Mathf.MoveTowards(cameraFollow.FollowOffset.x, 0, cameraVelocity * Time.deltaTime);
         }
+
+        // Flash Logic
+        if (isFlashing) {
+            HandleFlash();
+        }
     }
 
 
@@ -145,5 +154,27 @@ public class PlayerVisual : MonoBehaviour
             }
         }
         
+    }
+
+    // Handle flash
+    private void Instance_OnPlayerHit(object sender, PlayerMove.OnPlayerHitEventArgs e) {
+        isFlashing = true;
+        flashAmount = 1f;
+    }
+
+    private void HandleFlash() {
+        float flashRate = 50f;
+        Material topMat = topSprite.material;
+        Material bottomMat = bottomSprite.material;
+        topMat.SetColor("_FlashColor", Color.red);
+        bottomMat.SetColor("_FlashColor", Color.red);
+        flashAmount = Mathf.Lerp(flashAmount, 0, flashRate * Time.deltaTime);
+        topMat.SetFloat("_FlashAmount", flashAmount);
+        bottomMat.SetFloat("_FlashAmount", flashAmount);
+        if (flashAmount <= 0.05) {
+            topMat.SetFloat("_FlashAmount", 0);
+            bottomMat.SetFloat("_FlashAmount", 0);
+            isFlashing = false;
+        }
     }
 }

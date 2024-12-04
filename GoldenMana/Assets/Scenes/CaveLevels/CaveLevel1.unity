@@ -24386,7 +24386,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6161354235335677304, guid: f9baafa9f4f2a3342846d14657c67b9b, type: 3}
       propertyPath: playerLoadPos.x
-      value: -1.5
+      value: -41.5
       objectReference: {fileID: 0}
     - target: {fileID: 6161354235335677304, guid: f9baafa9f4f2a3342846d14657c67b9b, type: 3}
       propertyPath: playerLoadPos.y

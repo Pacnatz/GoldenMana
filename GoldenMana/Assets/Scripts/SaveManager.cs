@@ -93,15 +93,23 @@ public class SaveManager : MonoBehaviour {
 
     private IEnumerator LoadSceneData() {
         yield return new WaitForSeconds(.1f);
-        if (GameManager.Instance.FireballUnlocked) {
-            Player.Instance.UnlockFireSpell();
+        if (GameManager.Instance) {
+            if (GameManager.Instance.FireballUnlocked) {
+                Player.Instance.UnlockFireSpell();
+            }
         }
+        
+
+        // Pausing player input
         if (GameInput.Instance) {
             GameInput.Instance.PausePlayer();
             StartCoroutine(OnTransitionFinished(.5f));
         }
         
-        SceneTransitions.Instance.StartScene();
+        if (SceneTransitions.Instance) {
+            SceneTransitions.Instance.StartScene();
+        }
+        
         
     }
 
@@ -179,7 +187,9 @@ public class SaveManager : MonoBehaviour {
 
     private IEnumerator LoadPlayerFromSave() {
         // Scene Transition
-        SceneTransitions.Instance.SetBlack();
+        if (SceneTransitions.Instance) {
+            SceneTransitions.Instance.SetBlack();
+        }
         // Scene loading
         sceneList = saveObject.SceneList;
         selectedScene = saveObject.LastScene;

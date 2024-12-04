@@ -14,7 +14,10 @@ public class Door : BaseInteractable {
         if (hasPlayer) {
             // Load Scene
             // Set player position
-            SceneTransitions.Instance.EndScene();
+            if (SceneTransitions.Instance) {
+                SceneTransitions.Instance.EndScene();
+            }
+            
             StartCoroutine(LoadNextScene(.5f));
         }
 

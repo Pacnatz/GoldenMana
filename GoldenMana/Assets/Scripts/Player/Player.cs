@@ -14,8 +14,8 @@ public class Player : MonoBehaviour , IHasDialogue
     [SerializeField] private PlayerAttack playerAttack;
     [SerializeField] private GameObject deathParticlesPrefab;
 
-    private int health;
-    private int maxHealth = 100;
+    private float health;
+    private float maxHealth = 100;
 
     private void Awake() {
         if (Instance != null) {
@@ -28,7 +28,16 @@ public class Player : MonoBehaviour , IHasDialogue
         // Interface initialization
         Dialogue = new string[] { "You have died..", "Try again?" };
         HasChoice = true; // Death choice
+
+        // Debugging
+        UnlockFireSpell();
     }
+
+    private void Start() {
+        PlayerMove.Instance.OnPlayerHit += Instance_OnPlayerHit;
+    }
+
+
 
     private void Update() {
 
@@ -65,9 +74,16 @@ public class Player : MonoBehaviour , IHasDialogue
         GameManager.Instance.FireballUnlocked = true;
     }
 
+    // On take damage
+    private void Instance_OnPlayerHit(object sender, PlayerMove.OnPlayerHitEventArgs e) {
+        health -= e.Damage;
+    }
+
     void IHasDialogue.DialogueDone() {
         // Add actions here if needed
     }
+
+
 
 
 }
