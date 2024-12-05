@@ -15,8 +15,8 @@ public class Frog : BaseMonster
     private void Awake() {
         jumpCoolDown = Random.Range(1f, 2.5f);
         
-        health = 4f;
-        Damage = 10f;
+        health = 4;
+        Damage = 1;
     }
 
     protected override void Update() {
@@ -25,9 +25,9 @@ public class Frog : BaseMonster
         if (Player.Instance) {
             playerPos = Player.Instance.transform.position;
         }
-        
 
-        HandleSprite();
+
+        GetXDirectionStatic();
         CheckGround();
 
         if (inRange && onFloor) {
@@ -38,48 +38,78 @@ public class Frog : BaseMonster
             }
         }
 
-        if (rb.linearVelocityY < -.1f) {
+        if (onFloor) {
+            rb.linearVelocityX = 0;
+        }
+
+
+        if (rb.linearVelocityY < -.1f && !onFloor) {
             anim.Play("Fall");
             idleOneshot = true;
         }
 
     }
 
-    private void HandleSprite() {
+    private bool GetXDirectionStatic() {
         // Flipping sprite
         if (playerPos.x < transform.position.x) {
             sr.flipX = true;
+            return true;
         }
         else {
             sr.flipX = false;
+            return false;
         }
+        // Returns true if player is left side
     }
 
     private void CheckGround() {
-        float frogWidth = .45f;
-        RaycastHit2D isGrounded = Physics2D.CircleCast(transform.position, frogWidth, Vector2.down, .35f, floorLayer);
+        RaycastHit2D isGrounded = Physics2D.CircleCast(transform.position - new Vector3(0, .5f, 0), .4f ,Vector2.down, .2f, floorLayer);
         if (isGrounded) {
-            onFloor = true;
+            rb.AddForceY(2f, ForceMode2D.Force);
+            
             if (idleOneshot) {
                 idleOneshot = false;
+                onFloor = true;
                 anim.Play("Idle");
-                rb.linearVelocityX = 0;
+
             }
-        }
+
+        } 
         else { onFloor = false; }
     }
 
 
     private void HandleJump() {
-        float minJumpPower = 15;
-        float maxJumpPower = 40;
-        if (playerPos.x < transform.position.x) {
-            rb.AddForce(new Vector2(-Random.Range(minJumpPower, maxJumpPower), Random.Range(minJumpPower, maxJumpPower)), ForceMode2D.Impulse);
+        onFloor = false;
+
+        RaycastHit2D hitWall;
+        if (GetXDirectionStatic()) {
+            hitWall = Physics2D.Raycast(transform.position - new Vector3(0, .5f, 0), Vector2.left, 1f, floorLayer);
         }
         else {
-            rb.AddForce(new Vector2(Random.Range(minJumpPower, maxJumpPower), Random.Range(minJumpPower, maxJumpPower)), ForceMode2D.Impulse);
+            hitWall = Physics2D.Raycast(transform.position - new Vector3(0, .5f, 0), Vector2.right, 1f, floorLayer);
+        }
+
+        if (hitWall) {
+            if (GetXDirectionStatic()) {
+                rb.AddForce(new Vector2(Random.Range(5, 10), Random.Range(30, 40)), ForceMode2D.Impulse);
+            }
+            else {
+                rb.AddForce(new Vector2(-Random.Range(5, 10), Random.Range(30, 40)), ForceMode2D.Impulse);
+            }
+        }
+        else {
+            if (GetXDirectionStatic()) {
+                rb.AddForce(new Vector2(-Random.Range(15, 25), Random.Range(30, 40)), ForceMode2D.Impulse);
+            }
+            else {
+                rb.AddForce(new Vector2(Random.Range(15, 25), Random.Range(30, 40)), ForceMode2D.Impulse);
+            }
+
         }
         anim.Play("Jump");
+
     }
 
 
@@ -94,4 +124,5 @@ public class Frog : BaseMonster
             inRange = false;
         }
     }
+
 }

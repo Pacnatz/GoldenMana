@@ -23,12 +23,10 @@ public class SaveManager : MonoBehaviour {
             SceneName = sceneName;
             OpenedChestPos = new();
             BrokenCellPos = new();
-            PlayerLoadPos = Vector2.zero;
         }
         public string SceneName;
         public List<Vector2> OpenedChestPos;
         public List<Vector3Int> BrokenCellPos;
-        public Vector2 PlayerLoadPos;
     }
 
 
@@ -92,13 +90,7 @@ public class SaveManager : MonoBehaviour {
 
 
     private IEnumerator LoadSceneData() {
-        yield return new WaitForSeconds(.1f);
-        if (GameManager.Instance) {
-            if (GameManager.Instance.FireballUnlocked) {
-                Player.Instance.UnlockFireSpell();
-            }
-        }
-        
+        yield return new WaitForSeconds(.02f);
 
         // Pausing player input
         if (GameInput.Instance) {
@@ -121,9 +113,6 @@ public class SaveManager : MonoBehaviour {
         // Debugging purposes
     }
 
-    public void SetPlayerPosition(Vector2 playerLoadPos) {
-        Player.Instance.transform.position = playerLoadPos;
-    }
 
     // ############################################################################## SAVE AND LOAD SYSTEM
     public void Save(Vector2 savePos) {
@@ -210,16 +199,20 @@ public class SaveManager : MonoBehaviour {
     }
 
     private IEnumerator LoadPlayerFromScene(string sceneName, Vector2 loadPos) {
+        // Saving before scene change
+        int playerHealth = Player.Instance.health;
+        int playerMaxHealth = Player.Instance.maxHealth;
+        bool fireballUnlocked = Player.Instance.fireballUnlocked;
         SceneManager.LoadScene(sceneName);
         float sceneDelay = .1f;
         yield return new WaitForSeconds(sceneDelay);
-        // Player loading
+        // Loading after scene change
+        Player.Instance.health = playerHealth;
+        Player.Instance.maxHealth = playerMaxHealth;
+        Player.Instance.fireballUnlocked = fireballUnlocked;
+
         PlayerMove.Instance.gameObject.transform.position = loadPos;
-        if (saveObject != null) {
-            if (saveObject.FireballUnlocked) {
-                Player.Instance.UnlockFireSpell();
-            }
-        }
+
         
     }
 

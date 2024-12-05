@@ -5,7 +5,7 @@ public class Player : MonoBehaviour , IHasDialogue
     public static Player Instance { get; private set; }
 
     // Attack Unlock Variables
-    public bool fireballUnlocked { get; private set; }
+    
     // Dialogue Interface Variables
     public string[] Dialogue { get; set; }
     public bool HasChoice { get; set; }
@@ -14,16 +14,16 @@ public class Player : MonoBehaviour , IHasDialogue
     [SerializeField] private PlayerAttack playerAttack;
     [SerializeField] private GameObject deathParticlesPrefab;
 
-    private float health;
-    private float maxHealth = 100;
-
+    [HideInInspector] public bool fireballUnlocked;
+    [HideInInspector] public int health;
+    [HideInInspector] public int maxHealth;
+    
     private void Awake() {
         if (Instance != null) {
             Destroy(gameObject);
         }
         Instance = this;
 
-        health = maxHealth;
 
         // Interface initialization
         Dialogue = new string[] { "You have died..", "Try again?" };
@@ -31,6 +31,8 @@ public class Player : MonoBehaviour , IHasDialogue
 
         // Debugging
         UnlockFireSpell();
+        maxHealth = 8;
+        health = maxHealth;
     }
 
     private void Start() {
@@ -41,6 +43,8 @@ public class Player : MonoBehaviour , IHasDialogue
 
     private void Update() {
 
+        health = Mathf.Clamp(health, 0, maxHealth);
+        
         // Player death
         if (health <= 0) {
             GameObject deathParticles = Instantiate(deathParticlesPrefab, transform.position, Quaternion.identity);
@@ -48,6 +52,7 @@ public class Player : MonoBehaviour , IHasDialogue
             ((IHasDialogue)this).StartDialogue();
             Destroy(gameObject);
         }
+
     }
 
     private void OnCollisionEnter2D(Collision2D collision) {
@@ -71,7 +76,6 @@ public class Player : MonoBehaviour , IHasDialogue
     public void UnlockFireSpell() {
         playerAttack.UnlockFireSpell();
         fireballUnlocked = true;
-        GameManager.Instance.FireballUnlocked = true;
     }
 
     // On take damage

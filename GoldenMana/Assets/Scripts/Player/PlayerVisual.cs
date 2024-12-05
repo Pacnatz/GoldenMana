@@ -104,15 +104,18 @@ public class PlayerVisual : MonoBehaviour
         // Camera Logic
         float offset = 2;
         float cameraVelocity = 2f;
-        if (moveDirStatic > 0) {
-            cameraFollow.FollowOffset.x = Mathf.MoveTowards(cameraFollow.FollowOffset.x, offset, cameraVelocity * Time.deltaTime);
+        if (cameraFollow) {
+            if (moveDirStatic > 0) {
+                cameraFollow.FollowOffset.x = Mathf.MoveTowards(cameraFollow.FollowOffset.x, offset, cameraVelocity * Time.deltaTime);
+            }
+            else if (moveDirStatic < 0) {
+                cameraFollow.FollowOffset.x = Mathf.MoveTowards(cameraFollow.FollowOffset.x, -offset, cameraVelocity * Time.deltaTime);
+            }
+            else {
+                cameraFollow.FollowOffset.x = Mathf.MoveTowards(cameraFollow.FollowOffset.x, 0, cameraVelocity * Time.deltaTime);
+            }
         }
-        else if (moveDirStatic < 0) {
-            cameraFollow.FollowOffset.x = Mathf.MoveTowards(cameraFollow.FollowOffset.x, -offset, cameraVelocity * Time.deltaTime);
-        }
-        else {
-            cameraFollow.FollowOffset.x = Mathf.MoveTowards(cameraFollow.FollowOffset.x, 0, cameraVelocity * Time.deltaTime);
-        }
+
 
         // Flash Logic
         if (isFlashing) {

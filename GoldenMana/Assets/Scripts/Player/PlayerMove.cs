@@ -12,7 +12,7 @@ public class PlayerMove : MonoBehaviour
     }
     public event EventHandler<OnPlayerHitEventArgs> OnPlayerHit;
     public class OnPlayerHitEventArgs : EventArgs {
-        public float Damage;
+        public int Damage;
     }
 
     private LayerMask floorLayer;

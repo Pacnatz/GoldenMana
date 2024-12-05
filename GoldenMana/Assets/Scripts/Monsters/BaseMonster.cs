@@ -11,8 +11,8 @@ public class BaseMonster : MonoBehaviour {
     private Material material;
     private bool isFlashing = false;
 
-    protected float health;
-    [HideInInspector] public float Damage;
+    protected int health;
+    [HideInInspector] public int Damage;
     protected Rigidbody2D rb;
     protected SpriteRenderer sr;
 
@@ -43,7 +43,7 @@ public class BaseMonster : MonoBehaviour {
     }
 
 
-    public void TakeDamage(float damage) {
+    public void TakeDamage(int damage) {
         health -= damage;
         isFlashing = true;
         flashAmount = 1;
