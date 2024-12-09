@@ -5,8 +5,14 @@ using UnityEngine.SceneManagement;
 
 
 public class MainMenu : MonoBehaviour {
-    
 
+    [SerializeField] private GameObject creditsPanel;
+
+    private void Start() {
+        if (creditsPanel) {
+            creditsPanel.SetActive(false);
+        }
+    }
     public void OnNewGameButtonPressed() {
         // Load tutorial
         SceneManager.LoadScene("CaveLevel1");
@@ -21,5 +27,13 @@ public class MainMenu : MonoBehaviour {
     public void OnDeleteSaveButtonPressed() {
         // Delete save files
         SaveManager.Instance.DeleteSaveFile();
+    }
+
+    public void OnOpenCreditsPanel() {
+        creditsPanel.SetActive(true);
+    }
+
+    public void OnCloseCreditsPanel() {
+        creditsPanel.SetActive(false);
     }
 }
