@@ -49,7 +49,7 @@ public class Minotaur : BaseMonster, IHasDialogue {
     private void Awake() {
         // Initialization
         isBossMonster = true;
-        health = 200;
+        health = 125;
         Damage = 2;
         Dialogue = new string[] { "Prepare to die!" };
         playerLayer = LayerMask.GetMask("Player");
