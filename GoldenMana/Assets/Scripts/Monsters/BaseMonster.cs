@@ -3,8 +3,12 @@ using System.Collections;
 
 public class BaseMonster : MonoBehaviour {
 
+    [SerializeField] private GameObject healthPickup;
+    [SerializeField] private GameObject manaPickup;
     [SerializeField] private GameObject deathParticlesPrefab;
     [SerializeField] protected Animator anim;
+
+    protected bool isBossMonster = false;
 
     // Flash variables
     private float flashAmount = 1;
@@ -17,19 +21,33 @@ public class BaseMonster : MonoBehaviour {
     protected SpriteRenderer sr;
 
     protected LayerMask floorLayer;
+    protected LayerMask wallLayer;
+
+    protected int manaAmount;
 
 
     private void Start() {
         rb = GetComponent<Rigidbody2D>();
         sr = GetComponentInChildren<SpriteRenderer>();
         material = sr.material;
-        floorLayer = LayerMask.GetMask("Floor", "Breakable");
+        floorLayer = LayerMask.GetMask("Floor", "Breakable", "Monster");
+        wallLayer = LayerMask.GetMask("Floor", "Breakable");
     }
 
     protected virtual void Update() {
 
         // Death logic
-        if (health <= 0) {
+        if (health <= 0 && !isBossMonster) {
+
+            for (int i = 0; i < manaAmount; i++) {
+                Instantiate(manaPickup, transform.position, Quaternion.identity);
+            }
+
+            int chance = Random.Range(1, 101);
+            if (chance < 25) {
+                Instantiate(healthPickup, transform.position, Quaternion.identity);
+            }
+
             GameObject deathParticles = Instantiate(deathParticlesPrefab, transform.position, Quaternion.identity);
             Destroy(deathParticles, 1f);
             Destroy(gameObject);

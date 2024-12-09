@@ -7,6 +7,9 @@ public class Fireball : MonoBehaviour
     [SerializeField] private GameObject explosionPrefab;
     [SerializeField] private GameObject smokeParticlePrefab;
 
+
+    [SerializeField] private int damage;
+
     private Rigidbody2D rb;
     private float fireballSpeed = 20f;
     private Vector2 direction;
@@ -68,7 +71,7 @@ public class Fireball : MonoBehaviour
         }
         if (collision.gameObject.layer == LayerMask.NameToLayer("Monster")) {
             collision.gameObject.TryGetComponent<BaseMonster>(out var monsterScript);
-            monsterScript.TakeDamage(1);
+            monsterScript.TakeDamage(damage);
             Instantiate(explosionPrefab, transform.position, Quaternion.identity);
             Destroy(gameObject);
         }

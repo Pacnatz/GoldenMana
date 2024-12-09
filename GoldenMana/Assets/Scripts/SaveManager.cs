@@ -23,10 +23,12 @@ public class SaveManager : MonoBehaviour {
             SceneName = sceneName;
             OpenedChestPos = new();
             BrokenCellPos = new();
+            healthPickupPos = new();
         }
         public string SceneName;
         public List<Vector2> OpenedChestPos;
         public List<Vector3Int> BrokenCellPos;
+        public List<Vector2> healthPickupPos;
     }
 
 
@@ -118,7 +120,10 @@ public class SaveManager : MonoBehaviour {
     public void Save(Vector2 savePos) {
         // Save data here
         SaveObject saveObject = new SaveObject {
-            Health = 10,
+            Health = Player.Instance.health,
+            MaxHealth = Player.Instance.maxHealth,
+            Mana = Player.Instance.mana,
+            ManaLevel = Player.Instance.manaLevel,
             FireballUnlocked = Player.Instance.fireballUnlocked,
             SavePos = savePos,
             SceneList = sceneList,
@@ -187,6 +192,10 @@ public class SaveManager : MonoBehaviour {
         float sceneDelay = .1f;
         yield return new WaitForSeconds(sceneDelay);
         // Player loading
+        Player.Instance.health = saveObject.Health;
+        Player.Instance.maxHealth = saveObject.MaxHealth;
+        Player.Instance.mana = saveObject.Mana;
+        Player.Instance.manaLevel = saveObject.ManaLevel;
         PlayerMove.Instance.gameObject.transform.position = saveObject.SavePos;
         if (saveObject.FireballUnlocked) {
             Player.Instance.UnlockFireSpell();
@@ -202,6 +211,8 @@ public class SaveManager : MonoBehaviour {
         // Saving before scene change
         int playerHealth = Player.Instance.health;
         int playerMaxHealth = Player.Instance.maxHealth;
+        int playerManaLevel = Player.Instance.manaLevel;
+        int playerMana = Player.Instance.mana;
         bool fireballUnlocked = Player.Instance.fireballUnlocked;
         SceneManager.LoadScene(sceneName);
         float sceneDelay = .1f;
@@ -210,6 +221,8 @@ public class SaveManager : MonoBehaviour {
         Player.Instance.health = playerHealth;
         Player.Instance.maxHealth = playerMaxHealth;
         Player.Instance.fireballUnlocked = fireballUnlocked;
+        Player.Instance.manaLevel = playerManaLevel;
+        Player.Instance.mana = playerMana;
 
         PlayerMove.Instance.gameObject.transform.position = loadPos;
 
@@ -219,7 +232,10 @@ public class SaveManager : MonoBehaviour {
     // Save data class
     public class SaveObject {
         // Player saving
-        public float Health;
+        public int Health;
+        public int MaxHealth;
+        public int Mana;
+        public int ManaLevel;
         public bool FireballUnlocked;
         public Vector2 SavePos;
         // Scene saving

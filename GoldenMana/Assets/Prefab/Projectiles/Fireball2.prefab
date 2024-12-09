@@ -115,6 +115,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 256
   explosionPrefab: {fileID: 1823251917081723712, guid: 0c0df0d99414615439bc326e11e10d7d, type: 3}
+  smokeParticlePrefab: {fileID: 2778434203210326362, guid: 0d2689cf9227a7342a6ece3b6cedaaa7, type: 3}
+  damage: 2
 --- !u!1 &6642412201069580586
 GameObject:
   m_ObjectHideFlags: 0

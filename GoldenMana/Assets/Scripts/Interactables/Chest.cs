@@ -32,7 +32,7 @@ public class Chest : BaseInteractable , IHasDialogue
         if (!isOpened && hasPlayer) {
             isOpened = true;
             sr.sprite = openedChestSprite;
-            SaveManager.Instance.selectedScene.OpenedChestPos.Add(transform.position);
+            
             // Call Dialog UI
             ((IHasDialogue)this).StartDialogue();
         }
@@ -40,6 +40,7 @@ public class Chest : BaseInteractable , IHasDialogue
 
     public void DialogueDone() {
         Player.Instance.RecieveItem(outputItem);
+        SaveManager.Instance.selectedScene.OpenedChestPos.Add(transform.position);
     }
 
 }

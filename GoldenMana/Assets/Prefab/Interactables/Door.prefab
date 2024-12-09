@@ -179,5 +179,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 73f6c3002041f8d49854f94f59301d78, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isLocked: 0
   sceneToLoad: CaveLevel2
   playerLoadPos: {x: 0, y: 0}

@@ -9,7 +9,9 @@ public class PlayerAttack : MonoBehaviour
         public Vector2 AttackDir;
     }
 
-    [SerializeField] private GameObject fireballPrefab;
+    [SerializeField] private GameObject fireballPrefab1;
+    [SerializeField] private GameObject fireballPrefab2;
+    [SerializeField] private GameObject fireballPrefab3;
 
     private AttackMode attackState;
     private int attackIndex = 0;
@@ -60,7 +62,7 @@ public class PlayerAttack : MonoBehaviour
             // Handle X axis attack
             Vector3 xOffset = new Vector3(.5f, 0, 0);
             if (attackX > 0 && PlayerMove.Instance.GetMoveDirectionStaticX() > 0) {
-                GameObject fireball = Instantiate(fireballPrefab, transform.position + xOffset, Quaternion.identity);
+                GameObject fireball = InstantiateFireBall(xOffset);
                 if (fireball.TryGetComponent<Fireball>(out var fireballScript)) {  // If fireball script is attached
                     fireballScript.InitializeFireball(this, new Vector2(attackX, 0));
                 }
@@ -68,7 +70,7 @@ public class PlayerAttack : MonoBehaviour
                 OnAttackPressed?.Invoke(this, new OnAttackPressedEventArgs { AttackDir = new Vector2(attackX, 0) });
             }
             else if (attackX < 0 && PlayerMove.Instance.GetMoveDirectionStaticX() < 0) {
-                GameObject fireball = Instantiate(fireballPrefab, transform.position - xOffset, Quaternion.identity);
+                GameObject fireball = InstantiateFireBall(-xOffset);
                 if (fireball.TryGetComponent<Fireball>(out var fireballScript)) {  // If fireball script is attached
                     fireballScript.InitializeFireball(this, new Vector2(attackX, 0));
                 }
@@ -83,7 +85,7 @@ public class PlayerAttack : MonoBehaviour
             // Handle Y axis attack
             Vector3 yOffset = new Vector3(0, .5f, 0);
             if (attackY > 0) {
-                GameObject fireball = Instantiate(fireballPrefab, transform.position + yOffset + new Vector3(0, .25f, 0), Quaternion.identity);
+                GameObject fireball = InstantiateFireBall(yOffset + new Vector3(0, .25f, 0));
                 if (fireball.TryGetComponent<Fireball>(out var fireballScript)) {  // If fireball script is attached
                     fireballScript.InitializeFireball(this, new Vector2(0, attackY));
                 }
@@ -92,7 +94,7 @@ public class PlayerAttack : MonoBehaviour
                 OnAttackPressed?.Invoke(this, new OnAttackPressedEventArgs { AttackDir = new Vector2(0, attackY) });
             }
             else if (attackY < 0 && PlayerMove.Instance.onFloor == false) {
-                GameObject fireball = Instantiate(fireballPrefab, transform.position - yOffset, Quaternion.identity);
+                GameObject fireball = InstantiateFireBall(-yOffset);
                 if (fireball.TryGetComponent<Fireball>(out var fireballScript)) {  // If fireball script is attached
                     fireballScript.InitializeFireball(this, new Vector2(0, attackY));
                 }
@@ -103,6 +105,22 @@ public class PlayerAttack : MonoBehaviour
             // Handle Cooldown
             canFire = false;
         }
+    }
+
+    private GameObject InstantiateFireBall(Vector3 offset) {
+        GameObject fireball = null;
+        switch (Player.Instance.manaLevel) {
+            case 1:
+                fireball = Instantiate(fireballPrefab1, transform.position + offset, Quaternion.identity);
+                break;
+            case 2:
+                fireball = Instantiate(fireballPrefab2, transform.position + offset, Quaternion.identity);
+                break;
+            case 3:
+                fireball = Instantiate(fireballPrefab3, transform.position + offset, Quaternion.identity);
+                break;
+        }
+        return fireball;
     }
 
     // Allows only 2 fire balls on the scene at once

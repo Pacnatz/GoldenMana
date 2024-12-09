@@ -15,5 +15,6 @@ public class MainMenu : MonoBehaviour {
 
     public void OnLoadGameButtonPressed() {
         // Load save states
+        SaveManager.Instance.Load();
     }
 }
