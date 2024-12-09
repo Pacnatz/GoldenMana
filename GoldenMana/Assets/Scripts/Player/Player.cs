@@ -38,14 +38,14 @@ public class Player : MonoBehaviour , IHasDialogue
         Dialogue = new string[] { "You have died..", "Try again?" };
         HasChoice = true; // Death choice
 
-        maxHealth = 12;
+        maxHealth = 4;
         health = maxHealth;
 
         mana = 0;
         manaLevel = 1;
 
         // Debugging
-        UnlockFireSpell();
+        //UnlockFireSpell();
 
         
     }

@@ -58,6 +58,7 @@ public class SaveManager : MonoBehaviour {
 
     // Testing
     private void Update() {
+        /*
         if (Input.GetKeyDown(KeyCode.L)) {
             Load();
         }
@@ -67,6 +68,7 @@ public class SaveManager : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.O)) {
             ShowSceneData();
         }
+        */
     }
 
     // ############################################################################## SCENE DATA SYSTEM
@@ -105,7 +107,9 @@ public class SaveManager : MonoBehaviour {
         if (SceneTransitions.Instance) {
             SceneTransitions.Instance.StartScene();
         }
-        
+        if (PlayerUI.Instance) {
+            PlayerUI.Instance.UpdateHearts();
+        }
         
     }
 
@@ -163,7 +167,7 @@ public class SaveManager : MonoBehaviour {
 
     }
 
-    public void Load() {
+    public bool Load() {
         if (File.Exists(Application.dataPath + SAVE_PATH)){//&& File.Exists(Application.dataPath + KEY_PATH)) {
 
             // Load Key Data
@@ -177,9 +181,11 @@ public class SaveManager : MonoBehaviour {
 
 
             StartCoroutine(LoadPlayerFromSave());
+            return true;
         }
         else {
             Debug.LogWarning("Key not found");
+            return false;
         }
         
     }
@@ -227,7 +233,9 @@ public class SaveManager : MonoBehaviour {
         // Loading after scene change
         Player.Instance.health = playerHealth;
         Player.Instance.maxHealth = playerMaxHealth;
-        Player.Instance.fireballUnlocked = fireballUnlocked;
+        if (fireballUnlocked) {
+            Player.Instance.UnlockFireSpell();
+        }
         Player.Instance.minotaurKilled = minotaurKilled;
         Player.Instance.manaLevel = playerManaLevel;
         Player.Instance.mana = playerMana;

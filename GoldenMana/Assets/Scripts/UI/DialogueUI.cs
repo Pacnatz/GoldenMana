@@ -150,7 +150,11 @@ public class DialogueUI : MonoBehaviour {
             case 0:
                 // Reset to last save file
                 choice = 0;
-                SaveManager.Instance.Load();
+                if (!SaveManager.Instance.Load()) {
+                    SceneTransitions.Instance.EndScene();
+                    StartCoroutine(LoadSceneWithDelay(.5f));
+                }
+
                 break;
             case 1:
                 choice = 0;
@@ -159,6 +163,10 @@ public class DialogueUI : MonoBehaviour {
         }
     }
 
+    private IEnumerator LoadSceneWithDelay(float transitionDelay) {
+        yield return new WaitForSeconds(transitionDelay);
+        SceneManager.LoadScene("CaveLevel1");
+    }
 
 
     private void EraseText() {

@@ -43,6 +43,8 @@ public class PlayerUI : MonoBehaviour {
 
         manaLevelField.text = $"Level : {Player.Instance.manaLevel}";
 
+        Debug.Log(numHearts);
+
         // Don't show UI for these scenes
         for (int i = 0; i < numHearts; i++) {
             if (SceneManager.GetActiveScene().name != "MainMenu" || SceneManager.GetActiveScene().name == "CaveLevel4") {
@@ -107,6 +109,16 @@ public class PlayerUI : MonoBehaviour {
         isFlashing = true;
     }
 
+    public void UpdateHearts() {
+        for (int i = 0; i < 3; i++) {
+            if (i < numHearts) {
+                hearts[i].SetActive(true);
+            }
+            else {
+                hearts[i].SetActive(false);
+            }
+        }
 
+    }
 
 }
