@@ -17,7 +17,7 @@ public class HealthPickup : BaseInteractable, IHasDialogue {
 
 
         // Delete health pick up if it has already been picked up
-        foreach (Vector2 healthPickupPos in SaveManager.Instance.selectedScene.healthPickupPos) {
+        foreach (Vector2 healthPickupPos in SaveManager.Instance.selectedScene.HealthPickupPos) {
             if (Vector2.Distance(healthPickupPos, transform.position) < 1) {
                 Destroy(gameObject);
             }
@@ -40,7 +40,7 @@ public class HealthPickup : BaseInteractable, IHasDialogue {
         Player.Instance.health += 4;
 
         // Save item to SaveManager
-        SaveManager.Instance.selectedScene.healthPickupPos.Add(transform.position);
+        SaveManager.Instance.selectedScene.HealthPickupPos.Add(transform.position);
 
         Destroy(gameObject);
     }

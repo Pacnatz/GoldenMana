@@ -5,14 +5,14 @@ public class BaseMonster : MonoBehaviour {
 
     [SerializeField] private GameObject healthPickup;
     [SerializeField] private GameObject manaPickup;
-    [SerializeField] private GameObject deathParticlesPrefab;
+    [SerializeField] protected GameObject deathParticlesPrefab;
     [SerializeField] protected Animator anim;
 
     protected bool isBossMonster = false;
 
     // Flash variables
     private float flashAmount = 1;
-    private Material material;
+    protected Material material;
     private bool isFlashing = false;
 
     protected int health;
@@ -20,13 +20,13 @@ public class BaseMonster : MonoBehaviour {
     protected Rigidbody2D rb;
     protected SpriteRenderer sr;
 
+
     protected LayerMask floorLayer;
     protected LayerMask wallLayer;
 
     protected int manaAmount;
 
-
-    private void Start() {
+    protected virtual void Start() {
         rb = GetComponent<Rigidbody2D>();
         sr = GetComponentInChildren<SpriteRenderer>();
         material = sr.material;
@@ -61,7 +61,7 @@ public class BaseMonster : MonoBehaviour {
     }
 
 
-    public void TakeDamage(int damage) {
+    public virtual void TakeDamage(int damage) {
         health -= damage;
         isFlashing = true;
         flashAmount = 1;

@@ -4,8 +4,8 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 public class Door : BaseInteractable {
 
-
-    [SerializeField] private bool isLocked;
+    [SerializeField] private GameObject lockSprite;
+    public bool isLocked;
     [SerializeField] private string sceneToLoad;
     [SerializeField] private Vector2 playerLoadPos;
     private void Start() {
@@ -14,10 +14,19 @@ public class Door : BaseInteractable {
 
     }
 
+    protected virtual void Update() {
+        if (isLocked) {
+            lockSprite.SetActive(true);
+        }
+        else {
+            lockSprite.SetActive(false);
+        }
+    }
+
 
 
     private void Instance_OnInteractPressed(object sender, EventArgs e) {
-        if (hasPlayer) {
+        if (hasPlayer && !isLocked) {
             // Load Scene
             // Set player position
             if (SceneTransitions.Instance) {

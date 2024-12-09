@@ -9,7 +9,12 @@ public interface IHasDialogue {
     public void DialogueDone();
 
     public void StartDialogue() {
-        DialogueUI.Instance.InitializeDialogue(Dialogue, this, HasChoice);
+        if (DialogueUI.Instance) {
+            DialogueUI.Instance.InitializeDialogue(Dialogue, this, HasChoice);
+        }
+        else {
+            Debug.LogWarning("No DialogueUI script found");
+        }
     }
 
 

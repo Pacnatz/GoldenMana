@@ -15,6 +15,7 @@ public class Player : MonoBehaviour , IHasDialogue
     [SerializeField] private GameObject deathParticlesPrefab;
 
     [HideInInspector] public bool fireballUnlocked;
+    [HideInInspector] public bool minotaurKilled;
     [HideInInspector] public int health;
     [HideInInspector] public int maxHealth;
 
@@ -37,7 +38,7 @@ public class Player : MonoBehaviour , IHasDialogue
         Dialogue = new string[] { "You have died..", "Try again?" };
         HasChoice = true; // Death choice
 
-        maxHealth = 4;
+        maxHealth = 12;
         health = maxHealth;
 
         mana = 0;

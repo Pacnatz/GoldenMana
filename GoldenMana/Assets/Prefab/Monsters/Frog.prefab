@@ -124,6 +124,7 @@ MonoBehaviour:
   manaPickup: {fileID: 1377529037457103038, guid: 0a993a555e6697743b1091e60c61805c, type: 3}
   deathParticlesPrefab: {fileID: 2778434203210326362, guid: 0d2689cf9227a7342a6ece3b6cedaaa7, type: 3}
   anim: {fileID: 4301937935709894412}
+  sr: {fileID: 4852717420078061513}
   Damage: 0
 --- !u!1 &6823171823594263815
 GameObject:

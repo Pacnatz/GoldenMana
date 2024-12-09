@@ -28,7 +28,6 @@ public class PlayerUI : MonoBehaviour {
             DontDestroyOnLoad(gameObject);
             Instance = this;
         }
-
         // Disable each heart on start
         foreach (GameObject heart in hearts) {
             heart.SetActive(false);
@@ -37,14 +36,16 @@ public class PlayerUI : MonoBehaviour {
 
     private void Update() {
 
+        GetComponent<Canvas>().worldCamera = Camera.main;
+
         health = Player.Instance.health;
         numHearts = Player.Instance.maxHealth / 4;
 
         manaLevelField.text = $"Level : {Player.Instance.manaLevel}";
 
-
+        // Don't show UI for these scenes
         for (int i = 0; i < numHearts; i++) {
-            if (SceneManager.GetActiveScene().name != "MainMenu") {
+            if (SceneManager.GetActiveScene().name != "MainMenu" || SceneManager.GetActiveScene().name == "CaveLevel4") {
                 hearts[i].SetActive(true);
                 manaBar.SetActive(true);
             }
@@ -73,13 +74,13 @@ public class PlayerUI : MonoBehaviour {
         // Handle mana visuals
         int mana = Player.Instance.mana;
         int manaLevel = Player.Instance.manaLevel;
-
+        float fillTime = 6f;
         switch (manaLevel) {
             case 1:
-                manaFillBar.fillAmount = mana / 5f;  // Update 5 whenever needed running out of time to come up with a system
+                manaFillBar.fillAmount = Mathf.Lerp(manaFillBar.fillAmount, mana / 5f, fillTime * Time.deltaTime); // Update 5 to maxMana1
                 break;
             case 2:
-                manaFillBar.fillAmount = mana / 10f;
+                manaFillBar.fillAmount = Mathf.Lerp(manaFillBar.fillAmount, mana / 10f, fillTime * Time.deltaTime);
                 break;
             case 3:
                 manaFillBar.fillAmount = Mathf.Clamp(mana / 15f, 0, 1);
@@ -88,7 +89,7 @@ public class PlayerUI : MonoBehaviour {
 
 
         if (isFlashing) {
-            float flashRate = 20f;
+            float flashRate = 10f;
             Material fillBarMat = manaFillBar.material;
             flashAmount = Mathf.Lerp(flashAmount, 0, flashRate * Time.deltaTime);
             fillBarMat.SetFloat("_FlashAmount", flashAmount);

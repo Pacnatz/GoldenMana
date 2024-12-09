@@ -186,7 +186,7 @@ public class PlayerMove : MonoBehaviour
             // Sets invulnerability
             if (vulnerable) {
                 vulnerable = false;
-                vulnerabilityTimer = .5f;
+                vulnerabilityTimer = .3f;
                 // Adds backwards force to player
                 collision.gameObject.TryGetComponent<BaseMonster>(out var monsterScript);
                 float backMultiplier = 2;
@@ -196,6 +196,14 @@ public class PlayerMove : MonoBehaviour
                 // Fire event to player script
                 OnPlayerHit?.Invoke(this, new OnPlayerHitEventArgs { Damage = monsterScript.Damage });
             }
+            collision.gameObject.TryGetComponent<Minotaur>(out var minotaurScript);
+            if (minotaurScript) {
+                if (minotaurScript.GetIsFalling()) {
+                    // If minotaur is falling
+                    rb.AddForceX(minotaurScript.GetFallDirection() * 5, ForceMode2D.Impulse);
+                }
+            }
+
             
         }
     }

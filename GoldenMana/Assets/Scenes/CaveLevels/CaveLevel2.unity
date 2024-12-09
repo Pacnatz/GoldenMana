@@ -167,6 +167,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6161354235335677304, guid: f9baafa9f4f2a3342846d14657c67b9b, type: 3}
+      propertyPath: isLocked
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6161354235335677304, guid: f9baafa9f4f2a3342846d14657c67b9b, type: 3}
       propertyPath: sceneToLoad
       value: CaveLevel3
       objectReference: {fileID: 0}
@@ -1443,7 +1447,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1687249622
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1826,6 +1830,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6161354235335677304, guid: f9baafa9f4f2a3342846d14657c67b9b, type: 3}
+      propertyPath: isLocked
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6161354235335677304, guid: f9baafa9f4f2a3342846d14657c67b9b, type: 3}
       propertyPath: sceneToLoad
       value: CaveLevel1
       objectReference: {fileID: 0}
@@ -2073,6 +2081,8 @@ MonoBehaviour:
     SceneName: 
     OpenedChestPos: []
     BrokenCellPos: []
+    HealthPickupPos: []
+    EnemyKillPos: []
 --- !u!114 &1100156656647605211
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -73391,6 +73401,7 @@ MonoBehaviour:
   playerAttack: {fileID: 2182340640220369615}
   deathParticlesPrefab: {fileID: 2778434203210326362, guid: 0d2689cf9227a7342a6ece3b6cedaaa7, type: 3}
   fireballUnlocked: 0
+  minotaurKilled: 0
   health: 0
   maxHealth: 4
   mana: 0

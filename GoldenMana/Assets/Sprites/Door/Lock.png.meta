@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 8cc476ed311983d4bb7e314728094c3e
+guid: 27a51df682194c149890f77f973caf83
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -8288530929541473123
-    second: CircleCutOut_0
+      213: -5620155193319629329
+    second: Lock_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -46,12 +46,12 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 2
+  spriteMode: 1
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 32
+  spritePixelsToUnits: 16
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -152,13 +152,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: CircleCutOut_0
+      name: Lock_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 512
-        height: 512
+        width: 16
+        height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -167,8 +167,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: d9c97dab80939fc80800000000000000
-      internalID: -8288530929541473123
+      spriteID: feddd97e0a23102b0800000000000000
+      internalID: -5620155193319629329
       vertices: []
       indices: 
       edges: []
@@ -177,7 +177,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 5e97eb03825dee720800000000000000
     internalID: 0
     vertices: []
     indices: 
@@ -187,7 +187,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      CircleCutOut_0: -8288530929541473123
+      Lock_0: -5620155193319629329
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

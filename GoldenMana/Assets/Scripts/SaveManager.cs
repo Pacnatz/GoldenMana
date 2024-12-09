@@ -23,12 +23,14 @@ public class SaveManager : MonoBehaviour {
             SceneName = sceneName;
             OpenedChestPos = new();
             BrokenCellPos = new();
-            healthPickupPos = new();
+            HealthPickupPos = new();
+            EnemyKillPos = new();
         }
         public string SceneName;
         public List<Vector2> OpenedChestPos;
         public List<Vector3Int> BrokenCellPos;
-        public List<Vector2> healthPickupPos;
+        public List<Vector2> HealthPickupPos;
+        public List<Vector2> EnemyKillPos;
     }
 
 
@@ -109,7 +111,16 @@ public class SaveManager : MonoBehaviour {
 
     private IEnumerator OnTransitionFinished(float sceneDelay) {
         yield return new WaitForSeconds(sceneDelay);
-        GameInput.Instance.UnPausePlayer();
+        if (SceneManager.GetActiveScene().name != "CaveLevel3") { // Not the minotaur fight scene
+            GameInput.Instance.UnPausePlayer();
+        }
+        else {
+            // If the minotaur has already been killed
+            if (Player.Instance.minotaurKilled) {
+                GameInput.Instance.UnPausePlayer();
+            }
+
+        }
     }
     private void ShowSceneData() {
         // Debugging purposes
@@ -125,6 +136,7 @@ public class SaveManager : MonoBehaviour {
             Mana = Player.Instance.mana,
             ManaLevel = Player.Instance.manaLevel,
             FireballUnlocked = Player.Instance.fireballUnlocked,
+            MinotaurKilled = Player.Instance.minotaurKilled,
             SavePos = savePos,
             SceneList = sceneList,
             LastScene = selectedScene
@@ -133,7 +145,7 @@ public class SaveManager : MonoBehaviour {
 
         // Encrypt save data
         string json = JsonUtility.ToJson(saveObject);
-        /*
+
         string encryptedSaveJson = EncryptDataWithAes(json, out string keyBase64, out string vectorBase64);
 
         // Write key data
@@ -148,28 +160,21 @@ public class SaveManager : MonoBehaviour {
 
         // Save key data to txt file
         File.WriteAllText(Application.dataPath + KEY_PATH, keyJson);
-        */
-        File.WriteAllText(Application.dataPath + SAVE_PATH, json);
 
     }
 
     public void Load() {
         if (File.Exists(Application.dataPath + SAVE_PATH)){//&& File.Exists(Application.dataPath + KEY_PATH)) {
-            /*
+
             // Load Key Data
             string keyJson = File.ReadAllText(Application.dataPath + KEY_PATH);
             KeyObject keyObject = JsonUtility.FromJson<KeyObject>(keyJson);
             // Load Save Data
-            */
             string encryptedSaveJson = File.ReadAllText(Application.dataPath + SAVE_PATH);
-            /*
             string json = DecryptDataWithAes(encryptedSaveJson, keyObject.keyBase64, keyObject.vectorBase64);
             
-            SaveObject saveObject = JsonUtility.FromJson<SaveObject>(json);
-            */
-            saveObject = JsonUtility.FromJson<SaveObject>(encryptedSaveJson);
-            // Load data here
-            // health = saveObject.health;
+            saveObject = JsonUtility.FromJson<SaveObject>(json);
+
 
             StartCoroutine(LoadPlayerFromSave());
         }
@@ -200,6 +205,7 @@ public class SaveManager : MonoBehaviour {
         if (saveObject.FireballUnlocked) {
             Player.Instance.UnlockFireSpell();
         }
+        Player.Instance.minotaurKilled = saveObject.MinotaurKilled;
     }
 
     public void LoadSceneFromDoor(string sceneName, Vector2 loadPos) {
@@ -214,6 +220,7 @@ public class SaveManager : MonoBehaviour {
         int playerManaLevel = Player.Instance.manaLevel;
         int playerMana = Player.Instance.mana;
         bool fireballUnlocked = Player.Instance.fireballUnlocked;
+        bool minotaurKilled = Player.Instance.minotaurKilled;
         SceneManager.LoadScene(sceneName);
         float sceneDelay = .1f;
         yield return new WaitForSeconds(sceneDelay);
@@ -221,10 +228,14 @@ public class SaveManager : MonoBehaviour {
         Player.Instance.health = playerHealth;
         Player.Instance.maxHealth = playerMaxHealth;
         Player.Instance.fireballUnlocked = fireballUnlocked;
+        Player.Instance.minotaurKilled = minotaurKilled;
         Player.Instance.manaLevel = playerManaLevel;
         Player.Instance.mana = playerMana;
 
-        PlayerMove.Instance.gameObject.transform.position = loadPos;
+        if (PlayerMove.Instance) {
+            PlayerMove.Instance.gameObject.transform.position = loadPos;
+        }
+
 
         
     }
@@ -237,6 +248,7 @@ public class SaveManager : MonoBehaviour {
         public int Mana;
         public int ManaLevel;
         public bool FireballUnlocked;
+        public bool MinotaurKilled;
         public Vector2 SavePos;
         // Scene saving
         public List<SceneData> SceneList;
@@ -248,6 +260,15 @@ public class SaveManager : MonoBehaviour {
         public string vectorBase64;
     }
 
+    public void DeleteSaveFile() {
+        if (File.Exists(Application.dataPath + SAVE_PATH) && File.Exists(Application.dataPath + KEY_PATH)) {
+            File.Delete(Application.dataPath + SAVE_PATH);
+            File.Delete(Application.dataPath + KEY_PATH);
+        }
+        else {
+            Debug.LogWarning("Key not found");
+        }
+    }
 
 
     // ############################################################################## SAVE AND LOAD SYSTEM

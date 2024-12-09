@@ -17,4 +17,9 @@ public class MainMenu : MonoBehaviour {
         // Load save states
         SaveManager.Instance.Load();
     }
+
+    public void OnDeleteSaveButtonPressed() {
+        // Delete save files
+        SaveManager.Instance.DeleteSaveFile();
+    }
 }

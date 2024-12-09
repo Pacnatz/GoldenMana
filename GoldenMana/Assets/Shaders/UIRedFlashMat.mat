@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: UIFlashMat
-  m_Shader: {fileID: -6465566751694194690, guid: f44f34340ac173f4d9be6766c209b844, type: 3}
+  m_Name: UIRedFlashMat
+  m_Shader: {fileID: -6465566751694194690, guid: 35713a42421857047a4a6c64f721c5f5, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -56,6 +56,6 @@ Material:
     - _UIMaskSoftnessY: 1
     m_Colors:
     - _ClipRect: {r: 0, g: 0, b: 0, a: 0}
-    - _FlashColor: {r: 23.968628, g: 23.968628, b: 23.968628, a: 1}
+    - _FlashColor: {r: 11.984316, g: 11.984316, b: 11.984316, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
